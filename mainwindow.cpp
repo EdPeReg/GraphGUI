@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->spBxColorB->setMaximum(255);
 
     connect(ui->btnSend, &QPushButton::clicked, this, &MainWindow::btnSendPressed);
+    connect(ui->btnShow, &QPushButton::clicked, this, &MainWindow::btnShowPressed);
 }
 
 MainWindow::~MainWindow()
@@ -23,6 +24,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::btnSendPressed() {
     validateLnInput();
+    btnShowPressed();
+}
+
+void MainWindow::btnShowPressed() {
     showInformation();
 }
 
@@ -54,5 +59,6 @@ void MainWindow::validateLnInput() {
 }
 
 void MainWindow::showInformation() {
-
+    ShowInformation showInformation;
+    showInformation.exec();
 }
