@@ -6,6 +6,8 @@
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QDebug>
+#include <QMap>
+#include <QString>
 
 #include "showinformation.h"
 
@@ -27,8 +29,20 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QVector<QMap<QString, int>> particlesInformation;
+    QMap<QString, int> particleInformation;
+    QVector<QString> lnEdtValues;
 
-    void validateLnInput();
+    /* Validate that the information entered into the fields are corredct. */
+    bool validateLnInput();
+
+    /* Will open a qdialog to show the fields information. */
     void showInformation();
+
+    /* Obtains the information from the fields. */
+    void getParticlesInformation();
+
+    /* Clean each field. */
+    void cleanFields();
 };
 #endif // MAINWINDOW_H

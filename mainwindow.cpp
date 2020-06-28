@@ -23,42 +23,80 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::btnSendPressed() {
-    validateLnInput();
-    btnShowPressed();
+    if(validateLnInput()) {
+        getParticlesInformation();
+        cleanFields();
+    }
 }
 
 void MainWindow::btnShowPressed() {
     showInformation();
 }
 
-void MainWindow::validateLnInput() {
+bool MainWindow::validateLnInput() {
     // Because every line edit starts with those characters.
     QRegularExpression exprLineEdit("(lnEdt)");
 
     // Find every widget.
-    QList<QWidget*> widgets = QObject::findChildren<QWidget *>(exprLineEdit);
+    QList<QWidget*> lnEditWidgets = QObject::findChildren<QWidget *>(exprLineEdit);
 
-    foreach(QWidget *widget, widgets) {
+    // Obtain line edit information.
+    foreach(QWidget *lnEditWidget, lnEditWidgets) {
         QRegularExpression regAnyDigit("^[0-9]*$"); 	   // Accepts only numbers, no characters.
-        QLineEdit *ln = qobject_cast<QLineEdit *>(widget); // Convert my widget to line edit.
+        QLineEdit *ln = qobject_cast<QLineEdit *>(lnEditWidget); // Convert my widget to line edit.
 
         if(ln->text() != "") {
             QRegularExpressionMatch match = regAnyDigit.match(ln->text());
 
             if(!match.hasMatch()) {
                 QMessageBox::warning(this, "ERROR", "Insert only numbers");
-                break;
+                return false;
             }
         }
         // If there is some line edits empty.
         else {
             QMessageBox::warning(this, "ERROR", "Some fields are missing");
-            break;
+            return false;
         }
     }
+
+    return true;
 }
 
 void MainWindow::showInformation() {
     ShowInformation showInformation;
     showInformation.exec();
 }
+
+void MainWindow::getParticlesInformation() {
+    particleInformation["id"] = ui->lnEdtID->text().toInt();
+    particleInformation["origen X"] = ui->lnEdtOrigX->text().toInt();
+    particleInformation["origen Y"] = ui->lnEdtOrigY->text().toInt();
+    particleInformation["destino X"] = ui->lnEdtDestX->text().toInt();
+    particleInformation["destino Y"] = ui->lnEdtDestY->text().toInt();
+    particleInformation["velocidad"] = ui->lnEdtSpeed->text().toInt();
+    particleInformation["R"] = ui->spBxColorR->value();
+    particleInformation["G"] = ui->spBxColorG->value();
+    particleInformation["B"] = ui->spBxColorB->value();
+    particlesInformation.push_back(particleInformation);
+
+    qDebug() << particlesInformation << "\n";
+}
+
+void MainWindow::cleanFields() {
+    QRegularExpression expLnEdt("lnEdt");
+    QRegularExpression expSpBox("spBx");
+    QList<QWidget *> widgetsLnEdt = QObject::findChildren<QWidget*>(expLnEdt);
+    QList<QWidget *> widgetsSpBox = QObject::findChildren<QWidget*>(expSpBox);
+    foreach(QWidget *widgetLnEdt, widgetsLnEdt) {
+        QLineEdit *lnEdt = qobject_cast<QLineEdit*>(widgetLnEdt);
+        lnEdt->clear();
+    }
+
+    foreach(QWidget *widgetSpBox, widgetsSpBox) {
+        QSpinBox *spBox = qobject_cast<QSpinBox*>(widgetSpBox);
+        spBox->setValue(0);
+    }
+}
+
+
