@@ -28,12 +28,13 @@ void MainWindow::btnSendPressed() {
     if(validateLnInput()) {
         setParticlesInformation();
         cleanFields();
-
     }
 }
 
 void MainWindow::btnShowPressed() {
-    showInformation();
+    ShowInformation showInfoDialog(this, particlesInformation);
+    showInfoDialog.setModal(true);
+    showInfoDialog.exec();
 }
 
 bool MainWindow::validateLnInput() {
@@ -64,13 +65,6 @@ bool MainWindow::validateLnInput() {
     }
 
     return true;
-}
-
-void MainWindow::showInformation() {
-    ShowInformation showInfoDialog(this, particlesInformation);
-    showInfoDialog.setModal(true);
-
-    showInfoDialog.exec();
 }
 
 void MainWindow::setParticlesInformation() {

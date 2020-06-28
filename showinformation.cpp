@@ -25,12 +25,10 @@ void ShowInformation::putParticlesInformation() {
     QString value;
     int i = 0;
     for(vit = particlesInformation.begin(); vit != particlesInformation.end(); vit++) {
-        // 0 Because our first element is a QMap.
-        QMap<QString, int> aux = particlesInformation.at(i);
-        auto origX = aux.find("origen X");
-        auto origY = aux.find("origen Y");
-        auto destX = aux.find("destino X");
-        auto destY = aux.find("destino Y");
+        auto origX = particlesInformation.at(i).find("origen X");
+        auto origY = particlesInformation.at(i).find("origen Y");
+        auto destX = particlesInformation.at(i).find("destino X");
+        auto destY = particlesInformation.at(i).find("destino Y");
         int distance = computeEuclideanDist(*origX, *origY, *destX, *destY);
 
         QString aux2 = "Particula: " + QString::number(i + 1);
@@ -39,11 +37,10 @@ void ShowInformation::putParticlesInformation() {
         for(mit = vit->begin(); mit != vit->end(); mit++) {
             value = QString::number(mit.value());
             ui->txtEdtParticleInfo->append(mit.key() + " : " + value);
-            value = QString::number(distance);
         }
+        value = QString::number(distance);
         QString auxStr = "Distancia euclidiana";
         ui->txtEdtParticleInfo->append(auxStr + " : " + value);
-        ui->txtEdtParticleInfo->append("\n");
         i++;
     }
 }

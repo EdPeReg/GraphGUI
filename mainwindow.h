@@ -10,7 +10,6 @@
 #include <QString>
 
 #include "showinformation.h"
-#include "particle.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -36,9 +35,6 @@ private:
 
     /* Validate that the information entered into the fields are corredct. */
     bool validateLnInput();
-
-    /* Will open a qdialog to show the fields information. */
-    void showInformation();
 
     /* Set the information from the fields. */
     void setParticlesInformation();
