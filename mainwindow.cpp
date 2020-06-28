@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <iostream>
+
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -24,8 +26,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::btnSendPressed() {
     if(validateLnInput()) {
-        getParticlesInformation();
+        setParticlesInformation();
         cleanFields();
+
     }
 }
 
@@ -64,11 +67,13 @@ bool MainWindow::validateLnInput() {
 }
 
 void MainWindow::showInformation() {
-    ShowInformation showInformation;
-    showInformation.exec();
+    ShowInformation showInfoDialog(this, particlesInformation);
+    showInfoDialog.setModal(true);
+
+    showInfoDialog.exec();
 }
 
-void MainWindow::getParticlesInformation() {
+void MainWindow::setParticlesInformation() {
     particleInformation["id"] = ui->lnEdtID->text().toInt();
     particleInformation["origen X"] = ui->lnEdtOrigX->text().toInt();
     particleInformation["origen Y"] = ui->lnEdtOrigY->text().toInt();
@@ -79,9 +84,9 @@ void MainWindow::getParticlesInformation() {
     particleInformation["G"] = ui->spBxColorG->value();
     particleInformation["B"] = ui->spBxColorB->value();
     particlesInformation.push_back(particleInformation);
-
-    qDebug() << particlesInformation << "\n";
 }
+
+
 
 void MainWindow::cleanFields() {
     QRegularExpression expLnEdt("lnEdt");

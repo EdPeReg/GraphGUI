@@ -10,6 +10,7 @@
 #include <QString>
 
 #include "showinformation.h"
+#include "particle.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,9 +30,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QVector<QMap<QString, int>> particlesInformation;
+
     QMap<QString, int> particleInformation;
-    QVector<QString> lnEdtValues;
+    QVector<QMap<QString, int>> particlesInformation;
 
     /* Validate that the information entered into the fields are corredct. */
     bool validateLnInput();
@@ -39,10 +40,11 @@ private:
     /* Will open a qdialog to show the fields information. */
     void showInformation();
 
-    /* Obtains the information from the fields. */
-    void getParticlesInformation();
+    /* Set the information from the fields. */
+    void setParticlesInformation();
 
     /* Clean each field. */
     void cleanFields();
+
 };
 #endif // MAINWINDOW_H
