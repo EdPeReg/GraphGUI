@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>277</width>
-    <height>419</height>
+    <width>424</width>
+    <height>254</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,89 +15,8 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="10" column="0">
-     <widget class="QPushButton" name="btnSend">
-      <property name="text">
-       <string>Send</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
-     <widget class="QLineEdit" name="lnEdtDestX"/>
-    </item>
-    <item row="8" column="0">
-     <widget class="QLabel" name="lblColorG">
-      <property name="text">
-       <string>Color G</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="lblOriginX">
-      <property name="text">
-       <string>Origin X</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="1">
-     <widget class="QSpinBox" name="spBxColorR"/>
-    </item>
-    <item row="7" column="0">
-     <widget class="QLabel" name="lblColorR">
-      <property name="text">
-       <string>Color R</string>
-      </property>
-     </widget>
-    </item>
-    <item row="9" column="0">
-     <widget class="QLabel" name="lblColorB">
-      <property name="text">
-       <string>Color B</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="lblOriginY">
-      <property name="text">
-       <string>Origin Y</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="1">
-     <widget class="QLineEdit" name="lnEdtSpeed"/>
-    </item>
-    <item row="8" column="1">
-     <widget class="QSpinBox" name="spBxColorG"/>
-    </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="lblDestinationX">
-      <property name="text">
-       <string>Destination X</string>
-      </property>
-     </widget>
-    </item>
-    <item row="9" column="1">
-     <widget class="QSpinBox" name="spBxColorB"/>
-    </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="lblSpeed">
-      <property name="text">
-       <string>Speed</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="1">
-     <widget class="QLineEdit" name="lnEdtDestY"/>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="lnEdtOrigX"/>
-    </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="lblDestinationY">
-      <property name="text">
-       <string>Destination Y</string>
-      </property>
-     </widget>
+    <item row="1" column="2" colspan="2">
+     <widget class="QLineEdit" name="lnEdtOrigY"/>
     </item>
     <item row="0" column="0">
      <widget class="QLabel" name="lblId">
@@ -106,18 +25,101 @@
       </property>
      </widget>
     </item>
-    <item row="10" column="1">
-     <widget class="QPushButton" name="btnShow">
+    <item row="3" column="0">
+     <widget class="QLabel" name="lblSpeed">
       <property name="text">
-       <string>Show</string>
+       <string>Speed</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="lnEdtID"/>
+    <item row="1" column="0">
+     <widget class="QLabel" name="lblOriginXY">
+      <property name="text">
+       <string>Origin (X,Y)</string>
+      </property>
+     </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QLineEdit" name="lnEdtOrigY"/>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="lnEdtOrigX"/>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="lnEdtDestX"/>
+    </item>
+    <item row="2" column="2" colspan="2">
+     <widget class="QLineEdit" name="lnEdtDestY"/>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="lblColorRGB">
+      <property name="text">
+       <string>Color (R,G,B)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2">
+     <widget class="QSpinBox" name="spBxColorG"/>
+    </item>
+    <item row="4" column="1">
+     <widget class="QSpinBox" name="spBxColorR"/>
+    </item>
+    <item row="4" column="3">
+     <widget class="QSpinBox" name="spBxColorB"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="lblDestinationXY">
+      <property name="text">
+       <string>Destination (X,Y)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="4">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnSend">
+        <property name="text">
+         <string>Send</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnShow">
+        <property name="text">
+         <string>Show</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item row="3" column="1" colspan="3">
+     <widget class="QLineEdit" name="lnEdtSpeed"/>
+    </item>
+    <item row="0" column="1" colspan="3">
+     <widget class="QLineEdit" name="lnEdtID"/>
     </item>
    </layout>
   </widget>
@@ -126,12 +128,30 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>277</width>
+     <width>424</width>
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="action_Open"/>
+    <addaction name="action_Save"/>
+   </widget>
+   <addaction name="menu_File"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_Open">
+   <property name="text">
+    <string>&amp;Open</string>
+   </property>
+  </action>
+  <action name="action_Save">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>lnEdtID</tabstop>
