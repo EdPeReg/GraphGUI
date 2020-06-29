@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>424</width>
+    <height>254</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="2" colspan="2">
+     <widget class="QLineEdit" name="lnEdtOrigY"/>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="lblId">
+      <property name="text">
+       <string>ID</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="lblSpeed">
+      <property name="text">
+       <string>Speed</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="lblOriginXY">
+      <property name="text">
+       <string>Origin (X,Y)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="lnEdtOrigX"/>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="lnEdtDestX"/>
+    </item>
+    <item row="2" column="2" colspan="2">
+     <widget class="QLineEdit" name="lnEdtDestY"/>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="lblColorRGB">
+      <property name="text">
+       <string>Color (R,G,B)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2">
+     <widget class="QSpinBox" name="spBxColorG"/>
+    </item>
+    <item row="4" column="1">
+     <widget class="QSpinBox" name="spBxColorR"/>
+    </item>
+    <item row="4" column="3">
+     <widget class="QSpinBox" name="spBxColorB"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="lblDestinationXY">
+      <property name="text">
+       <string>Destination (X,Y)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="4">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnSend">
+        <property name="text">
+         <string>Send</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnShow">
+        <property name="text">
+         <string>Show</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item row="3" column="1" colspan="3">
+     <widget class="QLineEdit" name="lnEdtSpeed"/>
+    </item>
+    <item row="0" column="1" colspan="3">
+     <widget class="QLineEdit" name="lnEdtID"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>424</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="action_Open"/>
+    <addaction name="action_Save"/>
+   </widget>
+   <addaction name="menu_File"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_Open">
+   <property name="text">
+    <string>&amp;Open</string>
+   </property>
+  </action>
+  <action name="action_Save">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+  </action>
+ </widget>
+ <tabstops>
+  <tabstop>lnEdtID</tabstop>
+  <tabstop>lnEdtOrigX</tabstop>
+  <tabstop>lnEdtOrigY</tabstop>
+  <tabstop>lnEdtDestX</tabstop>
+  <tabstop>lnEdtDestY</tabstop>
+  <tabstop>lnEdtSpeed</tabstop>
+  <tabstop>spBxColorR</tabstop>
+  <tabstop>spBxColorG</tabstop>
+  <tabstop>spBxColorB</tabstop>
+  <tabstop>btnSend</tabstop>
+  <tabstop>btnShow</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
