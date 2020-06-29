@@ -116,26 +116,26 @@ void MainWindow::readJsonFile(QFile &file)
 
 void MainWindow::saveJsonFile()
 {
-    QString filename = QFileDialog::getSaveFileName(this, "Open file", "./", "JSON (*.json)");
-    QFile file(filename);
+//    QString filename = QFileDialog::getSaveFileName(this, "Open file", "./", "JSON (*.json)");
+//    QFile file(filename);
 
-    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QMessageBox::critical(this, "Error", "Cannot save file");
-    }
+//    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+//        QMessageBox::critical(this, "Error", "Cannot save file");
+//    }
 
-    QVector< QMap<QString, int> >::iterator vit;
-    QMap<QString, int>::iterator mit;
+//    QVector< QMap<QString, int> >::iterator vit;
+//    QMap<QString, int>::iterator mit;
 
-    QString key;
-    int value;
-    for(vit = particlesInformation.begin(); vit != particlesInformation.end(); vit++) {
-        QJsonArray array;
-        for(mit = vit->begin(); mit != vit->end(); mit++) {
-            QJsonObject jsonObject;
-            key = mit.key();
-            value = mit.value();
-        }
-    }
+//    QString key;
+//    int value;
+//    for(vit = particlesInformation.begin(); vit != particlesInformation.end(); vit++) {
+//        QJsonArray array;
+//        for(mit = vit->begin(); mit != vit->end(); mit++) {
+//            QJsonObject jsonObject;
+//            key = mit.key();
+//            value = mit.value();
+//        }
+//    }
 }
 
 void MainWindow::cleanFields() {
