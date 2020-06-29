@@ -35,8 +35,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    QMap<QString, int> particleInformation;
     QVector<QMap<QString, int>> particlesInformation;
+    QMap<QString, int> particleInformation;
 
     /* Validate that the information entered into the fields are corredct. */
     bool validateLnInput();

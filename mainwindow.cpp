@@ -134,26 +134,74 @@ void MainWindow::readJsonFile(QFile &file)
 
 void MainWindow::saveJsonFile()
 {
-//    QString filename = QFileDialog::getSaveFileName(this, "Open file", "./", "JSON (*.json)");
-//    QFile file(filename);
+    QString filename = QFileDialog::getSaveFileName(this, "Open file", "./", "JSON (*.json)");
+    QFile file(filename);
+//    QByteArray data = file.readAll();
 
-//    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-//        QMessageBox::critical(this, "Error", "Cannot save file");
-//    }
+//    QJsonDocument jsonDocument(QJsonDocument::fromJson(data));
+    //QJsonArray jsonDocumentArray = jsonDocument.array();
 
-//    QVector< QMap<QString, int> >::iterator vit;
-//    QMap<QString, int>::iterator mit;
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, "Error", "Cannot save file");
+    }
 
-//    QString key;
-//    int value;
-//    for(vit = particlesInformation.begin(); vit != particlesInformation.end(); vit++) {
-//        QJsonArray array;
-//        for(mit = vit->begin(); mit != vit->end(); mit++) {
-//            QJsonObject jsonObject;
-//            key = mit.key();
-//            value = mit.value();
-//        }
-//    }
+    QVector< QMap<QString, int> >::iterator vit;
+    QMap<QString, int>::iterator mit;
+
+//    QJsonObject obj;
+//    QJsonObject obj2;
+//    QJsonObject obj3;
+//    QJsonArray array;
+
+//    obj2.insert("blue", 240);
+//    obj2.insert("green", 179);
+//    obj2.insert("red", 125);
+
+//    obj3.insert("y", 2);
+//    obj3.insert("x", 70);
+
+//    obj.insert("color", obj2);
+//    obj.insert("destino", obj3);
+
+//    array.insert(0, obj);
+//    array.insert(1, obj);
+
+
+    int i = 0;
+    QJsonArray jsonArray;
+    QJsonObject mainObject;
+    QJsonObject secondaryObject;
+
+    qDebug() << particlesInformation << "\n";
+
+    // IT WORKS BUT IT DOESNT SHOW THE INFOR IN THE CORRECT ORDER.
+    for(vit = particlesInformation.begin(); vit != particlesInformation.end(); vit++) {
+        for(mit = vit->begin(); mit != vit->end(); mit++) {
+
+            qDebug() << mit.value() << " ";
+            secondaryObject.insert("blue", mit.value());
+//            secondaryObject.insert("green", mit.value());
+//            secondaryObject.insert("red", mit.value());
+            mainObject.insert("color", secondaryObject);
+
+//            secondaryObject.insert("y", mit.value());
+//            secondaryObject.insert("x", mit.value());
+//            mainObject.insert("destino", secondaryObject);
+
+//            secondaryObject.insert("y", mit.value());
+//            secondaryObject.insert("x", mit.value());
+//            mainObject.insert("origen", secondaryObject);
+
+//            mainObject.insert("id", mit.value());
+//            mainObject.insert("velocidad", mit.value());
+
+            jsonArray.insert(i, mainObject);
+        }
+        i++;
+        qDebug() << "\n";
+    }
+    qDebug() << jsonArray << "\n";
+    file.close();
 }
 
 void MainWindow::cleanFields() {

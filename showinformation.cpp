@@ -24,6 +24,7 @@ void ShowInformation::putParticlesInformation() {
 
     QString value;
     int i = 0;
+
     for(vit = particlesInformation.begin(); vit != particlesInformation.end(); vit++) {
         auto origX = particlesInformation.at(i).find("origen X");
         auto origY = particlesInformation.at(i).find("origen Y");
