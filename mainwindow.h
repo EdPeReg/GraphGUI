@@ -8,6 +8,11 @@
 #include <QDebug>
 #include <QMap>
 #include <QString>
+#include <QFile>
+#include <QFileDialog>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 #include "showinformation.h"
 
@@ -38,6 +43,15 @@ private:
 
     /* Set the information from the fields. */
     void setParticlesInformation();
+
+    /* Open the user's json file. */
+    void openJsonFile();
+
+    /* Read the user's json file. */
+    void readJsonFile(QFile &file);
+
+    /* Saves the particle information into a json file. */
+    void saveJsonFile();
 
     /* Clean each field. */
     void cleanFields();

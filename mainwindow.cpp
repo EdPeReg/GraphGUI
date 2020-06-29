@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->btnSend, &QPushButton::clicked, this, &MainWindow::btnSendPressed);
     connect(ui->btnShow, &QPushButton::clicked, this, &MainWindow::btnShowPressed);
+    connect(ui->action_Open, &QAction::triggered, this, &MainWindow::openJsonFile);
+    connect(ui->action_Save, &QAction::triggered, this, &MainWindow::saveJsonFile);
 }
 
 MainWindow::~MainWindow()
@@ -80,7 +82,61 @@ void MainWindow::setParticlesInformation() {
     particlesInformation.push_back(particleInformation);
 }
 
+void MainWindow::openJsonFile()
+{
+    QString filename = QFileDialog::getOpenFileName(this, "Open file", "./", "JSON (*.json)");
+    QFile file(filename);
 
+    if(!file.open(QIODevice::ReadOnly)) {
+        QMessageBox::critical(this, "Error", "Cannot open file");
+    }
+
+    readJsonFile(file);
+}
+
+void MainWindow::readJsonFile(QFile &file)
+{
+    QByteArray data = file.readAll();
+    file.close();
+
+    // Creating a json file and passing the file content to a json document.
+    QJsonDocument jsonDocument(QJsonDocument::fromJson(data));
+
+    // Our json file is a json array.
+    QJsonArray jsonDocumentArray = jsonDocument.array();
+
+    // WILL GO TO EACH INDEX, 0...n
+    // NOW HOE CAN I OBTAIN EACH KEY AND VALUE DE PUTAZO?
+    foreach(const QJsonValue &value, jsonDocumentArray) {
+        QJsonObject obj = value.toObject();
+        QJsonObject obj2 = obj["origen"].toObject(); // ACCECING TO MY KEY
+        qDebug() << obj2["x"].toInt() << "\n"; // WILL SHOW ALL THE COLOR VALUES.
+    }
+}
+
+void MainWindow::saveJsonFile()
+{
+    QString filename = QFileDialog::getSaveFileName(this, "Open file", "./", "JSON (*.json)");
+    QFile file(filename);
+
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, "Error", "Cannot save file");
+    }
+
+    QVector< QMap<QString, int> >::iterator vit;
+    QMap<QString, int>::iterator mit;
+
+    QString key;
+    int value;
+    for(vit = particlesInformation.begin(); vit != particlesInformation.end(); vit++) {
+        QJsonArray array;
+        for(mit = vit->begin(); mit != vit->end(); mit++) {
+            QJsonObject jsonObject;
+            key = mit.key();
+            value = mit.value();
+        }
+    }
+}
 
 void MainWindow::cleanFields() {
     QRegularExpression expLnEdt("lnEdt");
