@@ -42,6 +42,7 @@ void ShowInformation::putParticlesInformation() {
         QString auxStr = "Distancia euclidiana";
         ui->txtEdtParticleInfo->append(auxStr + " : " + value);
         i++;
+        ui->txtEdtParticleInfo->append("\n");
     }
 }
 

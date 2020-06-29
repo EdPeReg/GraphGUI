@@ -44,10 +44,14 @@ private:
     /* Set the information from the fields. */
     void setParticlesInformation();
 
+    /* Set the information using json information. */
+    void setParticlesInformation(const QJsonArray &array);
+
     /* Open the user's json file. */
     void openJsonFile();
 
-    /* Read the user's json file. */
+    /* Read the user's json file.
+       @param file is the json file to be readed. */
     void readJsonFile(QFile &file);
 
     /* Saves the particle information into a json file. */

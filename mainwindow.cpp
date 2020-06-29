@@ -82,6 +82,31 @@ void MainWindow::setParticlesInformation() {
     particlesInformation.push_back(particleInformation);
 }
 
+void MainWindow::setParticlesInformation(const QJsonArray &jsonDocumentArray)
+{
+    foreach(const QJsonValue &value, jsonDocumentArray) {
+        QJsonObject obj = value.toObject();
+
+        particleInformation["id"] = obj["id"].toInt();
+
+        QJsonObject obj2 = obj.value("origen").toObject();
+        particleInformation["origen X"] = obj2["x"].toInt();
+        particleInformation["origen Y"] = obj2["y"].toInt();
+
+        obj2 = obj.value("destino").toObject();
+        particleInformation["destino X"] = obj2["x"].toInt();
+        particleInformation["destino Y"] = obj2["y"].toInt();
+        particleInformation["velocidad"] = obj["velocidad"].toInt();
+
+        obj2 = obj.value("color").toObject();
+        particleInformation["R"] = obj2["red"].toInt();
+        particleInformation["G"] = obj2["green"].toInt();
+        particleInformation["B"] = obj2["blue"].toInt();
+
+        particlesInformation.push_back(particleInformation);
+    }
+}
+
 void MainWindow::openJsonFile()
 {
     QString filename = QFileDialog::getOpenFileName(this, "Open file", "./", "JSON (*.json)");
@@ -104,14 +129,7 @@ void MainWindow::readJsonFile(QFile &file)
 
     // Our json file is a json array.
     QJsonArray jsonDocumentArray = jsonDocument.array();
-
-    // WILL GO TO EACH INDEX, 0...n
-    // NOW HOE CAN I OBTAIN EACH KEY AND VALUE DE PUTAZO?
-    foreach(const QJsonValue &value, jsonDocumentArray) {
-        QJsonObject obj = value.toObject();
-        QJsonObject obj2 = obj["origen"].toObject(); // ACCECING TO MY KEY
-        qDebug() << obj2["x"].toInt() << "\n"; // WILL SHOW ALL THE COLOR VALUES.
-    }
+    setParticlesInformation(jsonDocumentArray);
 }
 
 void MainWindow::saveJsonFile()
