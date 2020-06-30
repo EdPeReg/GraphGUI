@@ -58,7 +58,7 @@ private:
     void saveJsonFile();
 
     /* Convert particles information into a json array. */
-    QJsonArray particlesInformationIntoJsonArray();
+    QJsonArray particlesInformationToJsonArray();
 
     /* Clean each field. */
     void cleanFields();

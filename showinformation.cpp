@@ -20,24 +20,20 @@ void ShowInformation::putParticlesInformation() {
     ui->txtEdtParticleInfo->setReadOnly(true);
     ui->txtEdtParticleInfo->clear();
 
-    QVector< QMap<QString, int> >::iterator vit;
-
     QString value;
     int i = 0;
-    for(vit = particlesInformation.begin(); vit != particlesInformation.end(); vit++) {
-        // THIS IS SO BIG... MAYBE IT CAN BE DONE IN A FOR BUT... IF I DO THAT
-        // I WILL NOT APPEND IN THE ORDER I WANT.
+    foreach(const auto &element, particlesInformation) {
         QString aux2 = "Particula: " + QString::number(i + 1);
         ui->txtEdtParticleInfo->append(aux2);
-        auto id = particlesInformation.at(i).find("id");
-        auto origX = particlesInformation.at(i).find("origen X");
-        auto origY = particlesInformation.at(i).find("origen Y");
-        auto destX = particlesInformation.at(i).find("destino X");
-        auto destY = particlesInformation.at(i).find("destino Y");
-        auto velocidad = particlesInformation.at(i).find("velocidad");
-        auto red = particlesInformation.at(i).find("R");
-        auto green = particlesInformation.at(i).find("G");
-        auto blue = particlesInformation.at(i).find("B");
+        auto id = element.find("id");
+        auto origX = element.find("origen X");
+        auto origY = element.find("origen Y");
+        auto destX = element.find("destino X");
+        auto destY = element.find("destino Y");
+        auto velocidad = element.find("velocidad");
+        auto red = element.find("R");
+        auto green = element.find("G");
+        auto blue = element.find("B");
         int distance = computeEuclideanDist(*origX, *origY, *destX, *destY);
 
         QString value = QString::number(id.value());

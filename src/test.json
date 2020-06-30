@@ -49,5 +49,22 @@
             "y": 3
         },
         "velocidad": 3
+    },
+    {
+        "color": {
+            "blue": 4,
+            "green": 4,
+            "red": 4
+        },
+        "destino": {
+            "x": 4,
+            "y": 4
+        },
+        "id": 4,
+        "origen": {
+            "x": 4,
+            "y": 4
+        },
+        "velocidad": 4
     }
 ]

@@ -141,32 +141,30 @@ void MainWindow::saveJsonFile()
         QMessageBox::critical(this, "Error", "Cannot save file");
     }
 
-    QJsonArray jsonArray = particlesInformationIntoJsonArray();
+    QJsonArray jsonArray = particlesInformationToJsonArray();
     QJsonDocument document(jsonArray);
     file.write(document.toJson());
 
     file.close();
 }
 
-QJsonArray MainWindow::particlesInformationIntoJsonArray()
+QJsonArray MainWindow::particlesInformationToJsonArray()
 {
-    QVector< QMap<QString, int> >::iterator vit;
-
     int i = 0;
     QJsonArray jsonArray;
     QJsonObject mainObject;
     QJsonObject secondaryObject;
 
-    for(vit = particlesInformation.begin(); vit != particlesInformation.end(); vit++) {
-        auto id = particlesInformation.at(i).find("id");
-        auto origX = particlesInformation.at(i).find("origen X");
-        auto origY = particlesInformation.at(i).find("origen Y");
-        auto destX = particlesInformation.at(i).find("destino X");
-        auto destY = particlesInformation.at(i).find("destino Y");
-        auto velocidad = particlesInformation.at(i).find("velocidad");
-        auto red = particlesInformation.at(i).find("R");
-        auto green = particlesInformation.at(i).find("G");
-        auto blue = particlesInformation.at(i).find("B");
+    foreach(const auto &element, particlesInformation) {
+        auto id = element.find("id");
+        auto origX = element.find("origen X");
+        auto origY = element.find("origen Y");
+        auto destX = element.find("destino X");
+        auto destY = element.find("destino Y");
+        auto velocidad = element.find("velocidad");
+        auto red = element.find("R");
+        auto green = element.find("G");
+        auto blue = element.find("B");
 
         secondaryObject.insert("blue", blue.value());
         secondaryObject.insert("green", green.value());
