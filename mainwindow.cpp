@@ -208,6 +208,11 @@ void MainWindow::openJsonFile()
 
 void MainWindow::readJsonFile(QFile &file)
 {
+    // Clearn our particles because when you open a new file, you don't the previous particles
+    // stored in the array, if you don't clean it, the previous particles will be showed
+    // in the table.
+    particles.clear();
+
     QByteArray data = file.readAll();
     file.close();
 
