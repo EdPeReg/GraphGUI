@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnSave, &QPushButton::clicked, this, &MainWindow::btnSavePressed);
     connect(ui->btnShow, &QPushButton::clicked, this, &MainWindow::btnShowPressed);
     connect(ui->btnShowParticleTable, &QPushButton::clicked, this, &MainWindow::btnShowParticleTable);
+    connect(ui->btnSearchID, &QPushButton::clicked, this, &MainWindow::btnSearchID);
     connect(ui->action_Open, &QAction::triggered, this, &MainWindow::openJsonFile);
     connect(ui->action_Save, &QAction::triggered, this, &MainWindow::saveJsonFile);
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::tabSelected);
@@ -46,7 +47,7 @@ void MainWindow::btnShowPressed() {
 
     QString value;
     int i = 0;
-    foreach(const auto &particle, particlesInformation) {
+    foreach(const auto &particle, particles) {
         QString aux2 = "Particula: " + QString::number(i + 1);
         ui->txtEdtParticleInfo->append(aux2);
         auto id = particle.find("id");
@@ -86,7 +87,7 @@ void MainWindow::btnShowPressed() {
         i++;
     }
 
-//    ShowInformation showInfoDialog(this, particlesInformation);
+//    ShowInformation showInfoDialog(this, particles);
 //    showInfoDialog.setModal(true);
     //    showInfoDialog.exec();
 }
@@ -98,11 +99,11 @@ void MainWindow::btnShowParticleTable()
 
     int totalColumns = 10; // This also includes eucledian distance.
     ui->tblWgtParticleInfo->setColumnCount(totalColumns);
-    ui->tblWgtParticleInfo->setRowCount(particlesInformation.size());
+    ui->tblWgtParticleInfo->setRowCount(particles.size());
     ui->tblWgtParticleInfo->setHorizontalHeaderLabels(labels);
 
     int row = 0;
-    foreach(const auto &particle, particlesInformation) {
+    foreach(const auto &particle, particles) {
         auto id = particle.find("id");
         auto origX = particle.find("origen X");
         auto origY = particle.find("origen Y");
@@ -155,6 +156,91 @@ void MainWindow::btnShowParticleTable()
     }
 }
 
+void MainWindow::btnSearchID() {
+    if(validateLnInput()) {
+        bool particleExist = false;
+        QVector< QMap<QString, int> > localParticles;
+        QMap<QString, int> element;
+        QString idStr = ui->lnEdtSearchID->text();
+        int userID = idStr.toInt();
+
+        foreach(const auto &particle, particles) {
+            auto particleID = particle.find("id");
+
+            if(userID == particleID.value()) {
+                particleExist = true;
+                element = particle;
+                localParticles.push_back(element);
+            }
+        }
+
+        if(!particleExist) {
+            QMessageBox::information(this, "Bad luck", "Particle doesn't exist");
+        } else {
+            QStringList labels = {"ID", "Origin X", "Origin Y", "Destination X", "Destination Y",
+                                       "Speed", "R", "G", "B", "Distance"};
+
+            int totalColumns = 10; // This also includes eucledian distance.
+            ui->tblWgtParticleInfo->setColumnCount(totalColumns);
+            ui->tblWgtParticleInfo->setRowCount(localParticles.size());
+            ui->tblWgtParticleInfo->setHorizontalHeaderLabels(labels);
+
+            int row = 0;
+            foreach(const auto &particle, localParticles) {
+                auto id = particle.find("id");
+                auto origX = particle.find("origen X");
+                auto origY = particle.find("origen Y");
+                auto destX = particle.find("destino X");
+                auto destY = particle.find("destino Y");
+                auto velocidad = particle.find("velocidad");
+                auto red = particle.find("R");
+                auto green = particle.find("G");
+                auto blue = particle.find("B");
+                int distance = computeEuclideanDist(*origX, *origY, *destX, *destY);
+
+                QString item = QString::number(id.value());
+                QTableWidgetItem *itemID = new QTableWidgetItem(item);
+
+                item = QString::number(origX.value());
+                QTableWidgetItem *itemOrigX = new QTableWidgetItem(item);
+                item = QString::number(origY.value());
+                QTableWidgetItem *itemOrigY = new QTableWidgetItem(item);
+
+                item = QString::number(destX.value());
+                QTableWidgetItem *itemDestX = new QTableWidgetItem(item);
+                item = QString::number(destY.value());
+                QTableWidgetItem *itemDestY = new QTableWidgetItem(item);
+
+                item = QString::number(velocidad.value());
+                QTableWidgetItem *itemVel = new QTableWidgetItem(item);
+
+                item = QString::number(red.value());
+                QTableWidgetItem *itemRed = new QTableWidgetItem(item);
+                item = QString::number(green.value());
+                QTableWidgetItem *itemGreen = new QTableWidgetItem(item);
+                item = QString::number(blue.value());
+                QTableWidgetItem *itemBlue = new QTableWidgetItem(item);
+
+                item = QString::number(distance);
+                QTableWidgetItem *itemDistance = new QTableWidgetItem(item);
+
+                ui->tblWgtParticleInfo->setItem(row, 0, itemID);
+                ui->tblWgtParticleInfo->setItem(row, 1, itemOrigX);
+                ui->tblWgtParticleInfo->setItem(row, 2, itemOrigY);
+                ui->tblWgtParticleInfo->setItem(row, 3, itemDestX);
+                ui->tblWgtParticleInfo->setItem(row, 4, itemDestY);
+                ui->tblWgtParticleInfo->setItem(row, 5, itemVel);
+                ui->tblWgtParticleInfo->setItem(row, 6, itemRed);
+                ui->tblWgtParticleInfo->setItem(row, 7, itemGreen);
+                ui->tblWgtParticleInfo->setItem(row, 8, itemBlue);
+                ui->tblWgtParticleInfo->setItem(row, 9, itemDistance);
+
+                row++;
+            }
+        }
+    }
+}
+
 bool MainWindow::validateLnInput() {
     // Because every line edit starts with those characters.
     QRegularExpression exprLineEdit("(lnEdt)");
@@ -177,7 +263,6 @@ bool MainWindow::validateLnInput() {
 
         if(ln->text() != "") {
             QRegularExpressionMatch match = regAnyDigit.match(ln->text());
-
             if(!match.hasMatch()) {
                 QMessageBox::warning(this, "ERROR", "Insert only numbers");
                 return false;
@@ -203,7 +288,7 @@ void MainWindow::setParticlesInformation() {
     particleInformation["R"] = ui->spBxColorR->value();
     particleInformation["G"] = ui->spBxColorG->value();
     particleInformation["B"] = ui->spBxColorB->value();
-    particlesInformation.push_back(particleInformation);
+    particles.push_back(particleInformation);
 }
 
 void MainWindow::setParticlesInformation(const QJsonArray &jsonDocumentArray)
@@ -227,7 +312,7 @@ void MainWindow::setParticlesInformation(const QJsonArray &jsonDocumentArray)
         particleInformation["G"] = obj2["green"].toInt();
         particleInformation["B"] = obj2["blue"].toInt();
 
-        particlesInformation.push_back(particleInformation);
+        particles.push_back(particleInformation);
     }
 }
 
@@ -265,7 +350,7 @@ void MainWindow::saveJsonFile()
         QMessageBox::critical(this, "Error", "Cannot save file");
     }
 
-    QJsonArray jsonArray = particlesInformationToJsonArray();
+    QJsonArray jsonArray = particlesToJsonArray();
     QJsonDocument document(jsonArray);
     file.write(document.toJson());
 
@@ -287,14 +372,14 @@ void MainWindow::tabSelected()
     }
 }
 
-QJsonArray MainWindow::particlesInformationToJsonArray()
+QJsonArray MainWindow::particlesToJsonArray()
 {
     int i = 0;
     QJsonArray jsonArray;
     QJsonObject mainObject;
     QJsonObject secondaryObject;
 
-    foreach(const auto &particle, particlesInformation) {
+    foreach(const auto &particle, particles) {
         auto id = particle.find("id");
         auto origX = particle.find("origen X");
         auto origY = particle.find("origen Y");
@@ -339,7 +424,7 @@ void MainWindow::setTable()
 
 //    int totalColumns = 10; // This also includes eucledian distance.
 //    ui->tblWgtParticleInfo->setColumnCount(totalColumns);
-//    ui->tblWgtParticleInfo->setRowCount(particlesInformation.size());
+//    ui->tblWgtParticleInfo->setRowCount(particles.size());
 //    ui->tblWgtParticleInfo->setHorizontalHeaderLabels(labels);
 
 //    for(int i = 0; i < totalColumns; i++) {

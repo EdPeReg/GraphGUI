@@ -32,6 +32,7 @@ private slots:
     void btnSavePressed();
     void btnShowPressed();
     void btnShowParticleTable();
+    void btnSearchID();
 
     /* Open the user's json file. */
     void openJsonFile();
@@ -49,11 +50,10 @@ private:
         TABLE
     };
 
-    QVector<QMap<QString, int>> particlesInformation;
+    QVector<QMap<QString, int>> particles;
     QMap<QString, int> particleInformation;
 
-    /* Validate the fields information depending of the current tab selected.
-       @param tabWidget is the tab selected. */
+    /* Validate the fields information depending of the current tab selected. */
     bool validateLnInput();
 
     /* Set the information from the fields. */
@@ -67,7 +67,7 @@ private:
     void readJsonFile(QFile &file);
 
     /* Convert particles information into a json array. */
-    QJsonArray particlesInformationToJsonArray();
+    QJsonArray particlesToJsonArray();
 
     /* Set up the the table with the proper rows and columns. */
     void setTable();
