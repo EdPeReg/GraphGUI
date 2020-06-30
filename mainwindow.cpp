@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->spBxColorG->setMaximum(255);
     ui->spBxColorB->setMaximum(255);
 
-    connect(ui->btnSend, &QPushButton::clicked, this, &MainWindow::btnSendPressed);
+    connect(ui->btnSave, &QPushButton::clicked, this, &MainWindow::btnSavePressed);
     connect(ui->btnShow, &QPushButton::clicked, this, &MainWindow::btnShowPressed);
     connect(ui->action_Open, &QAction::triggered, this, &MainWindow::openJsonFile);
     connect(ui->action_Save, &QAction::triggered, this, &MainWindow::saveJsonFile);
@@ -26,7 +26,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::btnSendPressed() {
+void MainWindow::btnSavePressed() {
     if(validateLnInput()) {
         setParticlesInformation();
         cleanFields();

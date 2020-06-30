@@ -29,7 +29,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void btnSendPressed();
+    void btnSavePressed();
     void btnShowPressed();
 
 private:
