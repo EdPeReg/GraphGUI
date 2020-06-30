@@ -136,72 +136,63 @@ void MainWindow::saveJsonFile()
 {
     QString filename = QFileDialog::getSaveFileName(this, "Open file", "./", "JSON (*.json)");
     QFile file(filename);
-//    QByteArray data = file.readAll();
-
-//    QJsonDocument jsonDocument(QJsonDocument::fromJson(data));
-    //QJsonArray jsonDocumentArray = jsonDocument.array();
 
     if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QMessageBox::critical(this, "Error", "Cannot save file");
     }
 
+    QJsonArray jsonArray = particlesInformationIntoJsonArray();
+    QJsonDocument document(jsonArray);
+    file.write(document.toJson());
+
+    file.close();
+}
+
+QJsonArray MainWindow::particlesInformationIntoJsonArray()
+{
     QVector< QMap<QString, int> >::iterator vit;
-    QMap<QString, int>::iterator mit;
-
-//    QJsonObject obj;
-//    QJsonObject obj2;
-//    QJsonObject obj3;
-//    QJsonArray array;
-
-//    obj2.insert("blue", 240);
-//    obj2.insert("green", 179);
-//    obj2.insert("red", 125);
-
-//    obj3.insert("y", 2);
-//    obj3.insert("x", 70);
-
-//    obj.insert("color", obj2);
-//    obj.insert("destino", obj3);
-
-//    array.insert(0, obj);
-//    array.insert(1, obj);
-
 
     int i = 0;
     QJsonArray jsonArray;
     QJsonObject mainObject;
     QJsonObject secondaryObject;
 
-    qDebug() << particlesInformation << "\n";
-
-    // IT WORKS BUT IT DOESNT SHOW THE INFOR IN THE CORRECT ORDER.
     for(vit = particlesInformation.begin(); vit != particlesInformation.end(); vit++) {
-        for(mit = vit->begin(); mit != vit->end(); mit++) {
+        auto id = particlesInformation.at(i).find("id");
+        auto origX = particlesInformation.at(i).find("origen X");
+        auto origY = particlesInformation.at(i).find("origen Y");
+        auto destX = particlesInformation.at(i).find("destino X");
+        auto destY = particlesInformation.at(i).find("destino Y");
+        auto velocidad = particlesInformation.at(i).find("velocidad");
+        auto red = particlesInformation.at(i).find("R");
+        auto green = particlesInformation.at(i).find("G");
+        auto blue = particlesInformation.at(i).find("B");
 
-            qDebug() << mit.value() << " ";
-            secondaryObject.insert("blue", mit.value());
-//            secondaryObject.insert("green", mit.value());
-//            secondaryObject.insert("red", mit.value());
-            mainObject.insert("color", secondaryObject);
+        secondaryObject.insert("blue", blue.value());
+        secondaryObject.insert("green", green.value());
+        secondaryObject.insert("red", red.value());
+        mainObject.insert("color", secondaryObject);
+        // Clear object because the previous values still there.
+        secondaryObject = QJsonObject();
 
-//            secondaryObject.insert("y", mit.value());
-//            secondaryObject.insert("x", mit.value());
-//            mainObject.insert("destino", secondaryObject);
+        secondaryObject.insert("y", destY.value());
+        secondaryObject.insert("x", destX.value());
+        mainObject.insert("destino", secondaryObject);
 
-//            secondaryObject.insert("y", mit.value());
-//            secondaryObject.insert("x", mit.value());
-//            mainObject.insert("origen", secondaryObject);
+        secondaryObject.insert("y", origY.value());
+        secondaryObject.insert("x", origX.value());
+        mainObject.insert("origen", secondaryObject);
+        secondaryObject = QJsonObject();
 
-//            mainObject.insert("id", mit.value());
-//            mainObject.insert("velocidad", mit.value());
+        mainObject.insert("id", id.value());
+        mainObject.insert("velocidad", velocidad.value());
 
-            jsonArray.insert(i, mainObject);
-        }
+        jsonArray.insert(i, mainObject);
+
         i++;
-        qDebug() << "\n";
     }
-    qDebug() << jsonArray << "\n";
-    file.close();
+
+    return jsonArray;
 }
 
 void MainWindow::cleanFields() {

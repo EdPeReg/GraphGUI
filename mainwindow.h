@@ -57,6 +57,9 @@ private:
     /* Saves the particle information into a json file. */
     void saveJsonFile();
 
+    /* Convert particles information into a json array. */
+    QJsonArray particlesInformationIntoJsonArray();
+
     /* Clean each field. */
     void cleanFields();
 

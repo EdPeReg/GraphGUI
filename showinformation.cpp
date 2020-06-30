@@ -18,12 +18,12 @@ ShowInformation::~ShowInformation()
 
 void ShowInformation::putParticlesInformation() {
     ui->txtEdtParticleInfo->setReadOnly(true);
+    ui->txtEdtParticleInfo->clear();
 
     QVector< QMap<QString, int> >::iterator vit;
 
     QString value;
     int i = 0;
-
     for(vit = particlesInformation.begin(); vit != particlesInformation.end(); vit++) {
         // THIS IS SO BIG... MAYBE IT CAN BE DONE IN A FOR BUT... IF I DO THAT
         // I WILL NOT APPEND IN THE ORDER I WANT.
