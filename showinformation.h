@@ -29,7 +29,7 @@ private:
     /* Will put the particles information into the text edit using the particles vector. */
     void putParticlesInformation();
 
-    int computeEuclideanDist(int orgX, int orgY, int destX, int destY);
+//    int computeEuclideanDist(int orgX, int orgY, int destX, int destY);
 };
 
 #endif // SHOWINFORMATION_H

@@ -34,7 +34,7 @@ void ShowInformation::putParticlesInformation() {
         auto red = element.find("R");
         auto green = element.find("G");
         auto blue = element.find("B");
-        int distance = computeEuclideanDist(*origX, *origY, *destX, *destY);
+//        int distance = computeEuclideanDist(*origX, *origY, *destX, *destY);
 
         QString value = QString::number(id.value());
         ui->txtEdtParticleInfo->append(id.key() + " : " + value);
@@ -54,7 +54,7 @@ void ShowInformation::putParticlesInformation() {
         ui->txtEdtParticleInfo->append(green.key() + " : " + value);
         value = QString::number(blue.value());
         ui->txtEdtParticleInfo->append(blue.key() + " : " + value);
-        value = QString::number(distance);
+//        value = QString::number(distance);
         QString auxStr = "Distancia euclidiana";
         ui->txtEdtParticleInfo->append(auxStr + " : " + value);
         ui->txtEdtParticleInfo->append("\n");
@@ -63,8 +63,8 @@ void ShowInformation::putParticlesInformation() {
     }
 }
 
-int ShowInformation::computeEuclideanDist(int orgX, int orgY, int destX, int destY)
-{
-    int distance = sqrt(pow(destX - orgX, 2) + pow(destY - orgY, 2));
-    return distance;
-}
+//int ShowInformation::computeEuclideanDist(int orgX, int orgY, int destX, int destY)
+//{
+//    int distance = sqrt(pow(destX - orgX, 2) + pow(destY - orgY, 2));
+//    return distance;
+//}

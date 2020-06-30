@@ -32,13 +32,27 @@ private slots:
     void btnSavePressed();
     void btnShowPressed();
 
+    /* Open the user's json file. */
+    void openJsonFile();
+
+    /* Saves the particle information into a json file. */
+    void saveJsonFile();
+
+    /* To know which tab is selected. */
+    void tabSelected();
 private:
     Ui::MainWindow *ui;
+
+    enum {
+        ADD_PARTICLE,
+        TABLE
+    };
 
     QVector<QMap<QString, int>> particlesInformation;
     QMap<QString, int> particleInformation;
 
-    /* Validate that the information entered into the fields are corredct. */
+    /* Validate the fields information depending of the current tab selected.
+       @param tabWidget is the tab selected. */
     bool validateLnInput();
 
     /* Set the information from the fields. */
@@ -47,21 +61,20 @@ private:
     /* Set the information using json information. */
     void setParticlesInformation(const QJsonArray &array);
 
-    /* Open the user's json file. */
-    void openJsonFile();
-
     /* Read the user's json file.
        @param file is the json file to be readed. */
     void readJsonFile(QFile &file);
 
-    /* Saves the particle information into a json file. */
-    void saveJsonFile();
-
     /* Convert particles information into a json array. */
     QJsonArray particlesInformationToJsonArray();
 
+    /* Set up the the table with the proper rows and columns. */
+    void setTable();
+
     /* Clean each field. */
     void cleanFields();
+
+    int computeEuclideanDist(int orgX, int orgY, int destX, int destY);
 
 };
 #endif // MAINWINDOW_H

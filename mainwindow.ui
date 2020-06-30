@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>521</width>
-    <height>543</height>
+    <width>526</width>
+    <height>522</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -83,7 +83,7 @@
          <widget class="QSpinBox" name="spBxColorG"/>
         </item>
         <item row="6" column="0" colspan="5">
-         <widget class="QTextEdit" name="txtEditParticleInfo"/>
+         <widget class="QTextEdit" name="txtEdtParticleInfo"/>
         </item>
         <item row="1" column="3">
          <widget class="QLineEdit" name="lnEdtOrigY"/>
@@ -106,10 +106,36 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="tabParticleTable">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>Particle Table</string>
        </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLineEdit" name="lnEdtSearchID"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnSearchID">
+            <property name="text">
+             <string>Search</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tblWgtParticleInfo"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnShowParticleTable">
+          <property name="text">
+           <string>Show</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -120,7 +146,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>521</width>
+     <width>526</width>
      <height>22</height>
     </rect>
    </property>
@@ -157,8 +183,7 @@
   <tabstop>spBxColorB</tabstop>
   <tabstop>btnSave</tabstop>
   <tabstop>btnShow</tabstop>
-  <tabstop>tabWidget</tabstop>
-  <tabstop>txtEditParticleInfo</tabstop>
+  <tabstop>txtEdtParticleInfo</tabstop>
  </tabstops>
  <resources/>
  <connections/>
