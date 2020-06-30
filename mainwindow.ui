@@ -183,6 +183,11 @@
   <tabstop>spBxColorB</tabstop>
   <tabstop>btnSave</tabstop>
   <tabstop>btnShow</tabstop>
+  <tabstop>lnEdtSearchID</tabstop>
+  <tabstop>btnSearchID</tabstop>
+  <tabstop>btnShowParticleTable</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>tblWgtParticleInfo</tabstop>
   <tabstop>txtEdtParticleInfo</tabstop>
  </tabstops>
  <resources/>

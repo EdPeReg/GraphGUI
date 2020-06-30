@@ -31,6 +31,7 @@ public:
 private slots:
     void btnSavePressed();
     void btnShowPressed();
+    void btnShowParticleTable();
 
     /* Open the user's json file. */
     void openJsonFile();
