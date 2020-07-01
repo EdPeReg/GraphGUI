@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1074</width>
+    <width>1029</width>
     <height>640</height>
    </rect>
   </property>
@@ -26,7 +26,7 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="1">
-         <widget class="QGroupBox" name="groupBox_2">
+         <widget class="QGroupBox" name="grpBxDrawGraph">
           <property name="title">
            <string/>
           </property>
@@ -52,7 +52,7 @@
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QGroupBox" name="groupBox">
+         <widget class="QGroupBox" name="grpBxAddParticle">
           <property name="title">
            <string/>
           </property>
@@ -181,7 +181,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1074</width>
+     <width>1029</width>
      <height>22</height>
     </rect>
    </property>
@@ -214,11 +214,18 @@
   <tabstop>lnEdtDestX</tabstop>
   <tabstop>lnEdtSpeed</tabstop>
   <tabstop>spBxColorR</tabstop>
+  <tabstop>spBxColorG</tabstop>
+  <tabstop>spBxColorB</tabstop>
+  <tabstop>btnSave</tabstop>
+  <tabstop>btnShow</tabstop>
+  <tabstop>btnDraw</tabstop>
+  <tabstop>btnClear</tabstop>
   <tabstop>lnEdtSearchID</tabstop>
   <tabstop>btnSearchID</tabstop>
   <tabstop>btnShowParticleTable</tabstop>
-  <tabstop>txtEdtParticleInfo</tabstop>
+  <tabstop>tabWidget</tabstop>
   <tabstop>gphViewGraph</tabstop>
+  <tabstop>txtEdtParticleInfo</tabstop>
   <tabstop>tblWgtParticleInfo</tabstop>
  </tabstops>
  <resources/>

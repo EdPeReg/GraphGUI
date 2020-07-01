@@ -49,6 +49,9 @@ void MainWindow::btnShowPressed() {
 
     QString value;
     int i = 0;
+
+    // Iterate in each particle, get its information and append that information
+    // in a text edit.
     foreach(const auto &particle, particles) {
         QString aux2 = "Particula: " + QString::number(i + 1);
         ui->txtEdtParticleInfo->append(aux2);
@@ -98,7 +101,6 @@ void MainWindow::btnParticleTable()
 {
     // First receives the global particles.
     setParticleTable(particles);
-
 }
 
 void MainWindow::btnSearchID() {
@@ -122,17 +124,20 @@ void MainWindow::btnSearchID() {
 bool MainWindow::validateLnInput() {
     // Because every line edit starts with those characters.
     QRegularExpression exprLineEdit("(lnEdt)");
+    QWidget *tabWidget = new QWidget;
+    QObjectList widgetList;
 
-    QWidget *tabWidget = ui->tabWidget->widget(ui->tabWidget->currentIndex());
-
-    // Find the widgets that are in our tab.
-    QObjectList widgetList = tabWidget->children();
-
+    if(tabSelected() == TAB_ADD_PARTICLE) {
+        widgetList = ui->grpBxAddParticle->children();
+    } else if(tabSelected() == TAB_TABLE) {
+        tabWidget = ui->tabWidget->widget(ui->tabWidget->currentIndex());
+        widgetList = tabWidget->children();
+    }
 
     // Obtain line edit information.
-    foreach(auto lnEditWidget, widgetList) {
+    foreach(auto widget, widgetList) {
         QRegularExpression regAnyDigit("^[0-9]*$"); 	   // Accepts only numbers, no characters.
-        QLineEdit *ln = qobject_cast<QLineEdit *>(lnEditWidget); // Convert my widget to line edit.
+        QLineEdit *ln = qobject_cast<QLineEdit *>(widget); // Convert my widget to line edit.
 
         // If the widget couldn't be converted, go to the next widget.
         if(ln == nullptr) {
@@ -240,19 +245,20 @@ void MainWindow::saveJsonFile()
     file.close();
 }
 
-void MainWindow::tabSelected()
+int MainWindow::tabSelected()
 {
     switch(ui->tabWidget->currentIndex()) {
-        case ADD_PARTICLE:
-//            validateLnInput(tabWidget);
+        case TAB_ADD_PARTICLE:
+            return ui->tabWidget->currentIndex();
         break;
 
         break;
-        case TABLE:
-            //validateLnInput();
-            //setTable();
+        case TAB_TABLE:
+            return ui->tabWidget->currentIndex();
         break;
     }
+
+    return -1; // ERROR.
 }
 
 QJsonArray MainWindow::particlesToJsonArray()

@@ -34,26 +34,28 @@ private slots:
     void btnParticleTable();
     void btnSearchID();
 
-    /* Open the user's json file. */
-    void openJsonFile();
-
-    /* Saves the particle information into a json file. */
-    void saveJsonFile();
-
-    /* To know which tab is selected. */
-    void tabSelected();
 private:
     Ui::MainWindow *ui;
 
     enum {
-        ADD_PARTICLE,
-        TABLE
+        TAB_ADD_PARTICLE,
+        TAB_TABLE
     };
 
     QVector<QMap<QString, int>> particles;
     QMap<QString, int> particleInformation;
     bool particleExist;
     bool isBtnShowParticlePressed;
+
+    /* Open the user's json file. */
+    void openJsonFile();
+
+    /* Saves the particle information into a json file. */
+    void saveJsonFile();
+
+    /* To know which tab is selected.
+     * @return Returns the index of the tab selected. */
+    int tabSelected();
 
     /* Validate the fields information depending of the current tab selected. */
     bool validateLnInput();
@@ -68,14 +70,16 @@ private:
        @param file is the json file to be readed. */
     void readJsonFile(QFile &file);
 
-    /* Convert particles information into a json array. */
+    /* Convert particles information into a json array.
+     * @return A json array with the particles information. */
     QJsonArray particlesToJsonArray();
 
     /* Set up the the table with the proper rows, columns and particle information.
        @particles is the vector with the particles information. */
     void setParticleTable(QVector< QMap<QString, int> > particles);
 
-    /* Will get the particles that the user found by ID. */
+    /* Will get the particles that the user found by ID.
+     * @return A vector that contains all particles found by ID. */
     QVector< QMap<QString, int> > getParticlesByID();
 
     /* Clean each field. */
