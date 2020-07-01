@@ -124,15 +124,8 @@ void MainWindow::btnSearchID() {
 bool MainWindow::validateLnInput() {
     // Because every line edit starts with those characters.
     QRegularExpression exprLineEdit("(lnEdt)");
-    QWidget *tabWidget = new QWidget;
-    QObjectList widgetList;
 
-    if(tabSelected() == TAB_ADD_PARTICLE) {
-        widgetList = ui->grpBxAddParticle->children();
-    } else if(tabSelected() == TAB_TABLE) {
-        tabWidget = ui->tabWidget->widget(ui->tabWidget->currentIndex());
-        widgetList = tabWidget->children();
-    }
+    QObjectList widgetList = getWidgetsTab();
 
     // Obtain line edit information.
     foreach(auto widget, widgetList) {
@@ -159,6 +152,22 @@ bool MainWindow::validateLnInput() {
     }
 
     return true;
+}
+
+QObjectList MainWindow::getWidgetsTab()
+{
+    QWidget *tabWidget = new QWidget;
+    QObjectList widgetList;
+
+    // Getting the widgets from the current tab.
+    if(tabSelected() == TAB_ADD_PARTICLE) {
+        widgetList = ui->grpBxAddParticle->children();
+    } else if(tabSelected() == TAB_TABLE) {
+        tabWidget = ui->tabWidget->widget(ui->tabWidget->currentIndex());
+        widgetList = tabWidget->children();
+    }
+
+    return widgetList;
 }
 
 void MainWindow::setParticlesInformation() {

@@ -60,6 +60,10 @@ private:
     /* Validate the fields information depending of the current tab selected. */
     bool validateLnInput();
 
+    /* Get the widgets from the current tab.
+     * @return A widget list from the current tab. */
+    QObjectList getWidgetsTab();
+
     /* Set the information from the fields. */
     void setParticlesInformation();
 
