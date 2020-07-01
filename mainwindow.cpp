@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnShow, &QPushButton::clicked, this, &MainWindow::btnShowPressed);
     connect(ui->btnShowParticleTable, &QPushButton::clicked, this, &MainWindow::btnParticleTable);
     connect(ui->btnSearchID, &QPushButton::clicked, this, &MainWindow::btnSearchID);
+    connect(ui->btnDraw, &QPushButton::clicked, this, &MainWindow::btnDrawPressed);
     connect(ui->action_Open, &QAction::triggered, this, &MainWindow::openJsonFile);
     connect(ui->action_Save, &QAction::triggered, this, &MainWindow::saveJsonFile);
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::tabSelected);
@@ -119,6 +120,11 @@ void MainWindow::btnSearchID() {
             setParticleTable(localParticles);
         }
     }
+}
+
+void MainWindow::btnDrawPressed()
+{
+    drawParticles();
 }
 
 bool MainWindow::validateLnInput() {
@@ -407,6 +413,22 @@ QVector<QMap<QString, int> > MainWindow::getParticlesByID()
     }
 
     return localParticles;
+}
+
+void MainWindow::drawParticles()
+{
+    QGraphicsScene *scene = new QGraphicsScene(this);
+    QPen pen;
+    pen.setWidth(2);
+    ui->gphViewGraph->setScene(scene);
+
+    foreach(const auto &particle, particles) {
+        QColor particleColor;
+        particleColor.setRgb(particle["R"], particle["G"], particle["B"]);
+        pen.setColor(particleColor);
+        scene->addLine(particle["origen X"], particle["origen Y"],
+                       particle["destino X"], particle["destino Y"], pen);
+    }
 }
 
 void MainWindow::cleanFields() {

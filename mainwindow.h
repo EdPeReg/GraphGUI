@@ -13,6 +13,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QGraphicsScene>
 
 #include "showinformation.h"
 
@@ -33,6 +34,7 @@ private slots:
     void btnShowPressed();
     void btnParticleTable();
     void btnSearchID();
+    void btnDrawPressed();
 
 private:
     Ui::MainWindow *ui;
@@ -85,6 +87,9 @@ private:
     /* Will get the particles that the user found by ID.
      * @return A vector that contains all particles found by ID. */
     QVector< QMap<QString, int> > getParticlesByID();
+
+    /* Draw the particles as lines. */
+    void drawParticles();
 
     /* Clean each field. */
     void cleanFields();

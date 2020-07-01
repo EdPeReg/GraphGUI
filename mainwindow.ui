@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1029</width>
-    <height>640</height>
+    <width>1204</width>
+    <height>749</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,8 +31,12 @@
            <string/>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0" colspan="2">
-            <widget class="QGraphicsView" name="gphViewGraph"/>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="btnClear">
+             <property name="text">
+              <string>Clear</string>
+             </property>
+            </widget>
            </item>
            <item row="1" column="0">
             <widget class="QPushButton" name="btnDraw">
@@ -41,12 +45,8 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
-            <widget class="QPushButton" name="btnClear">
-             <property name="text">
-              <string>Clear</string>
-             </property>
-            </widget>
+           <item row="0" column="0" colspan="2">
+            <widget class="QGraphicsView" name="gphViewGraph"/>
            </item>
           </layout>
          </widget>
@@ -57,51 +57,21 @@
            <string/>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
-           <item row="0" column="0">
-            <widget class="QLabel" name="lblId">
+           <item row="6" column="5">
+            <widget class="QPushButton" name="btnShow">
              <property name="text">
-              <string>ID</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2" colspan="2">
-            <widget class="QLineEdit" name="lnEdtID"/>
-           </item>
-           <item row="0" column="4" colspan="2">
-            <widget class="QLineEdit" name="lnEdtOrigY"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="lblOriginXY">
-             <property name="text">
-              <string>Origin (X,Y)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2" colspan="2">
-            <widget class="QLineEdit" name="lnEdtOrigX"/>
-           </item>
-           <item row="1" column="4" colspan="2">
-            <widget class="QLineEdit" name="lnEdtDestY"/>
-           </item>
-           <item row="2" column="0" colspan="2">
-            <widget class="QLabel" name="lblDestinationXY">
-             <property name="text">
-              <string>Destination (X,Y)</string>
+              <string>Show</string>
              </property>
             </widget>
            </item>
            <item row="2" column="2" colspan="2">
             <widget class="QLineEdit" name="lnEdtDestX"/>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="lblSpeed">
-             <property name="text">
-              <string>Speed</string>
-             </property>
-            </widget>
+           <item row="4" column="2">
+            <widget class="QSpinBox" name="spBxColorR"/>
            </item>
-           <item row="3" column="2" colspan="2">
-            <widget class="QLineEdit" name="lnEdtSpeed"/>
+           <item row="4" column="3">
+            <widget class="QSpinBox" name="spBxColorG"/>
            </item>
            <item row="4" column="0">
             <widget class="QLabel" name="lblColorRGB">
@@ -110,21 +80,45 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="2">
-            <widget class="QSpinBox" name="spBxColorR"/>
+           <item row="1" column="2" colspan="2">
+            <widget class="QLineEdit" name="lnEdtOrigX"/>
            </item>
-           <item row="4" column="3">
-            <widget class="QSpinBox" name="spBxColorG"/>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lblOriginXY">
+             <property name="text">
+              <string>Origin (X,Y)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="lblId">
+             <property name="text">
+              <string>ID</string>
+             </property>
+            </widget>
            </item>
            <item row="4" column="4">
             <widget class="QSpinBox" name="spBxColorB"/>
            </item>
-           <item row="6" column="5">
-            <widget class="QPushButton" name="btnShow">
+           <item row="5" column="0" colspan="6">
+            <widget class="QTextEdit" name="txtEdtParticleInfo"/>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QLabel" name="lblDestinationXY">
              <property name="text">
-              <string>Show</string>
+              <string>Destination (X,Y)</string>
              </property>
             </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="lblSpeed">
+             <property name="text">
+              <string>Speed</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2" colspan="2">
+            <widget class="QLineEdit" name="lnEdtID"/>
            </item>
            <item row="6" column="4">
             <widget class="QPushButton" name="btnSave">
@@ -133,8 +127,14 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="0" colspan="6">
-            <widget class="QTextEdit" name="txtEdtParticleInfo"/>
+           <item row="3" column="2" colspan="2">
+            <widget class="QLineEdit" name="lnEdtSpeed"/>
+           </item>
+           <item row="1" column="4" colspan="2">
+            <widget class="QLineEdit" name="lnEdtDestY"/>
+           </item>
+           <item row="0" column="4" colspan="2">
+            <widget class="QLineEdit" name="lnEdtOrigY"/>
            </item>
           </layout>
          </widget>
@@ -181,7 +181,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1029</width>
+     <width>1204</width>
      <height>22</height>
     </rect>
    </property>
