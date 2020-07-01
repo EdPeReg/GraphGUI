@@ -65,7 +65,7 @@ void MainWindow::btnShowPressed() {
         auto red = particle.find("R");
         auto green = particle.find("G");
         auto blue = particle.find("B");
-        int distance = computeEuclideanDist(*origX, *origY, *destX, *destY);
+        double distance = computeEuclideanDist(*origX, *origY, *destX, *destY);
 
         QString value = QString::number(id.value());
         ui->txtEdtParticleInfo->append(id.key() + " : " + value);
@@ -284,34 +284,24 @@ QJsonArray MainWindow::particlesToJsonArray()
     QJsonObject secondaryObject;
 
     foreach(const auto &particle, particles) {
-        auto id = particle.find("id");
-        auto origX = particle.find("origen X");
-        auto origY = particle.find("origen Y");
-        auto destX = particle.find("destino X");
-        auto destY = particle.find("destino Y");
-        auto velocidad = particle.find("velocidad");
-        auto red = particle.find("R");
-        auto green = particle.find("G");
-        auto blue = particle.find("B");
-
-        secondaryObject.insert("blue", blue.value());
-        secondaryObject.insert("green", green.value());
-        secondaryObject.insert("red", red.value());
+        secondaryObject.insert("blue", particle["B"]);
+        secondaryObject.insert("green", particle["G"]);
+        secondaryObject.insert("red", particle["R"]);
         mainObject.insert("color", secondaryObject);
         // Clear object because the previous values still there.
         secondaryObject = QJsonObject();
 
-        secondaryObject.insert("y", destY.value());
-        secondaryObject.insert("x", destX.value());
+        secondaryObject.insert("y", particle["destino Y"]);
+        secondaryObject.insert("x", particle["destino X"]);
         mainObject.insert("destino", secondaryObject);
 
-        secondaryObject.insert("y", origY.value());
-        secondaryObject.insert("x", origX.value());
+        secondaryObject.insert("y", particle["origen Y"]);
+        secondaryObject.insert("x", particle["origen X"]);
         mainObject.insert("origen", secondaryObject);
         secondaryObject = QJsonObject();
 
-        mainObject.insert("id", id.value());
-        mainObject.insert("velocidad", velocidad.value());
+        mainObject.insert("id", particle["id"]);
+        mainObject.insert("velocidad", particle["velocidad"]);
 
         jsonArray.insert(i, mainObject);
 
@@ -341,38 +331,37 @@ void MainWindow::setParticleTable(QVector< QMap<QString, int> > particles)
     int row = 0;
 
     foreach(const auto &particle, particles) {
-        auto id = particle.find("id");
+        // The reason why I did this to find their value, it was because somehow, if I use
+        // particle["origen X"] and so on, the values are different, and the distance will
+        // be also different, why? I don't know.
+        // Doing this, the distance now will be correct.
         auto origX = particle.find("origen X");
         auto origY = particle.find("origen Y");
         auto destX = particle.find("destino X");
         auto destY = particle.find("destino Y");
-        auto velocidad = particle.find("velocidad");
-        auto red = particle.find("R");
-        auto green = particle.find("G");
-        auto blue = particle.find("B");
-        int distance = computeEuclideanDist(*origX, *origY, *destX, *destY);
+        double distance = computeEuclideanDist(*origX, *origY, *destX, *destY);
 
-        QString item = QString::number(id.value());
+        QString item = QString::number(particle["id"]);
         QTableWidgetItem *itemID = new QTableWidgetItem(item);
 
-        item = QString::number(origX.value());
+        item = QString::number(particle["origen X"]);
         QTableWidgetItem *itemOrigX = new QTableWidgetItem(item);
-        item = QString::number(origY.value());
+        item = QString::number(particle["origen Y"]);
         QTableWidgetItem *itemOrigY = new QTableWidgetItem(item);
 
-        item = QString::number(destX.value());
+        item = QString::number(particle["destino X"]);
         QTableWidgetItem *itemDestX = new QTableWidgetItem(item);
-        item = QString::number(destY.value());
+        item = QString::number(particle["destino Y"]);
         QTableWidgetItem *itemDestY = new QTableWidgetItem(item);
 
-        item = QString::number(velocidad.value());
+        item = QString::number(particle["velocidad"]);
         QTableWidgetItem *itemVel = new QTableWidgetItem(item);
 
-        item = QString::number(red.value());
+        item = QString::number(particle["R"]);
         QTableWidgetItem *itemRed = new QTableWidgetItem(item);
-        item = QString::number(green.value());
+        item = QString::number(particle["G"]);
         QTableWidgetItem *itemGreen = new QTableWidgetItem(item);
-        item = QString::number(blue.value());
+        item = QString::number(particle["B"]);
         QTableWidgetItem *itemBlue = new QTableWidgetItem(item);
 
         item = QString::number(distance);
@@ -448,8 +437,8 @@ void MainWindow::cleanFields() {
     }
 }
 
-int MainWindow::computeEuclideanDist(int orgX, int orgY, int destX, int destY)
+double MainWindow::computeEuclideanDist(double orgX, double orgY, double destX, double destY)
 {
-    int distance = sqrt(pow(destX - orgX, 2) + pow(destY - orgY, 2));
+    double distance = sqrt(pow(destX - orgX, 2) + pow(destY - orgY, 2));
     return distance;
 }

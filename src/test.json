@@ -32,5 +32,22 @@
             "y": 2
         },
         "velocidad": 2
+    },
+    {
+        "color": {
+            "blue": 3,
+            "green": 3,
+            "red": 3
+        },
+        "destino": {
+            "x": 3,
+            "y": 3
+        },
+        "id": 3,
+        "origen": {
+            "x": 3,
+            "y": 3
+        },
+        "velocidad": 3
     }
 ]

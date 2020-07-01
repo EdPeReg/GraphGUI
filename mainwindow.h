@@ -94,7 +94,7 @@ private:
     /* Clean each field. */
     void cleanFields();
 
-    int computeEuclideanDist(int orgX, int orgY, int destX, int destY);
+    double computeEuclideanDist(double orgX, double orgY, double destX, double destY);
 
 };
 #endif // MAINWINDOW_H
