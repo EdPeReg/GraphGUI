@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>526</width>
-    <height>522</height>
+    <width>1074</width>
+    <height>640</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,84 +25,119 @@
         <string>Add Particle</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="2" column="2">
-         <widget class="QLineEdit" name="lnEdtDestX"/>
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0" colspan="2">
+            <widget class="QGraphicsView" name="gphViewGraph"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="btnDraw">
+             <property name="text">
+              <string>Draw</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="btnClear">
+             <property name="text">
+              <string>Clear</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QLabel" name="lblId">
-          <property name="text">
-           <string>ID</string>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string/>
           </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="0">
+            <widget class="QLabel" name="lblId">
+             <property name="text">
+              <string>ID</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2" colspan="2">
+            <widget class="QLineEdit" name="lnEdtID"/>
+           </item>
+           <item row="0" column="4" colspan="2">
+            <widget class="QLineEdit" name="lnEdtOrigY"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lblOriginXY">
+             <property name="text">
+              <string>Origin (X,Y)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2" colspan="2">
+            <widget class="QLineEdit" name="lnEdtOrigX"/>
+           </item>
+           <item row="1" column="4" colspan="2">
+            <widget class="QLineEdit" name="lnEdtDestY"/>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QLabel" name="lblDestinationXY">
+             <property name="text">
+              <string>Destination (X,Y)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2" colspan="2">
+            <widget class="QLineEdit" name="lnEdtDestX"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="lblSpeed">
+             <property name="text">
+              <string>Speed</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2" colspan="2">
+            <widget class="QLineEdit" name="lnEdtSpeed"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="lblColorRGB">
+             <property name="text">
+              <string>Color (R,G,B)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QSpinBox" name="spBxColorR"/>
+           </item>
+           <item row="4" column="3">
+            <widget class="QSpinBox" name="spBxColorG"/>
+           </item>
+           <item row="4" column="4">
+            <widget class="QSpinBox" name="spBxColorB"/>
+           </item>
+           <item row="6" column="5">
+            <widget class="QPushButton" name="btnShow">
+             <property name="text">
+              <string>Show</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="4">
+            <widget class="QPushButton" name="btnSave">
+             <property name="text">
+              <string>Save</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0" colspan="6">
+            <widget class="QTextEdit" name="txtEdtParticleInfo"/>
+           </item>
+          </layout>
          </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="lblColorRGB">
-          <property name="text">
-           <string>Color (R,G,B)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="lblOriginXY">
-          <property name="text">
-           <string>Origin (X,Y)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="4">
-         <widget class="QSpinBox" name="spBxColorB"/>
-        </item>
-        <item row="1" column="2">
-         <widget class="QLineEdit" name="lnEdtOrigX"/>
-        </item>
-        <item row="10" column="4">
-         <widget class="QPushButton" name="btnShow">
-          <property name="text">
-           <string>Show</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="lblSpeed">
-          <property name="text">
-           <string>Speed</string>
-          </property>
-         </widget>
-        </item>
-        <item row="10" column="3">
-         <widget class="QPushButton" name="btnSave">
-          <property name="text">
-           <string>Save</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="3">
-         <widget class="QLineEdit" name="lnEdtDestY"/>
-        </item>
-        <item row="4" column="3">
-         <widget class="QSpinBox" name="spBxColorG"/>
-        </item>
-        <item row="6" column="0" colspan="5">
-         <widget class="QTextEdit" name="txtEdtParticleInfo"/>
-        </item>
-        <item row="1" column="3">
-         <widget class="QLineEdit" name="lnEdtOrigY"/>
-        </item>
-        <item row="4" column="2">
-         <widget class="QSpinBox" name="spBxColorR"/>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="lblDestinationXY">
-          <property name="text">
-           <string>Destination (X,Y)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2" colspan="2">
-         <widget class="QLineEdit" name="lnEdtSpeed"/>
-        </item>
-        <item row="0" column="2" colspan="2">
-         <widget class="QLineEdit" name="lnEdtID"/>
         </item>
        </layout>
       </widget>
@@ -146,7 +181,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>526</width>
+     <width>1074</width>
      <height>22</height>
     </rect>
    </property>
@@ -173,22 +208,18 @@
  </widget>
  <tabstops>
   <tabstop>lnEdtID</tabstop>
-  <tabstop>lnEdtOrigX</tabstop>
   <tabstop>lnEdtOrigY</tabstop>
-  <tabstop>lnEdtDestX</tabstop>
+  <tabstop>lnEdtOrigX</tabstop>
   <tabstop>lnEdtDestY</tabstop>
+  <tabstop>lnEdtDestX</tabstop>
   <tabstop>lnEdtSpeed</tabstop>
   <tabstop>spBxColorR</tabstop>
-  <tabstop>spBxColorG</tabstop>
-  <tabstop>spBxColorB</tabstop>
-  <tabstop>btnSave</tabstop>
-  <tabstop>btnShow</tabstop>
   <tabstop>lnEdtSearchID</tabstop>
   <tabstop>btnSearchID</tabstop>
   <tabstop>btnShowParticleTable</tabstop>
-  <tabstop>tabWidget</tabstop>
-  <tabstop>tblWgtParticleInfo</tabstop>
   <tabstop>txtEdtParticleInfo</tabstop>
+  <tabstop>gphViewGraph</tabstop>
+  <tabstop>tblWgtParticleInfo</tabstop>
  </tabstops>
  <resources/>
  <connections/>
