@@ -1,9 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <iostream>
-
 using namespace std;
+
+// TODO
+// - Able to do zoom in our graphics view.
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -28,8 +29,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnShowParticleTable, &QPushButton::clicked, this, &MainWindow::btnParticleTable);
     connect(ui->btnSearchID, &QPushButton::clicked, this, &MainWindow::btnSearchID);
     connect(ui->btnDraw, &QPushButton::clicked, this, &MainWindow::btnDrawPressed);
+    connect(ui->btnClear, &QPushButton::clicked, this, &MainWindow::btnClearPressed);
     connect(ui->action_Open, &QAction::triggered, this, &MainWindow::openJsonFile);
     connect(ui->action_Save, &QAction::triggered, this, &MainWindow::saveJsonFile);
+    connect(ui->action_Ascending, &QAction::triggered, this, &MainWindow::sortAscending);
+    connect(ui->action_Descending, &QAction::triggered, this, &MainWindow::sortDescending);
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::tabSelected);
 }
 
@@ -125,6 +129,11 @@ void MainWindow::btnSearchID() {
 void MainWindow::btnDrawPressed()
 {
     drawParticles();
+}
+
+void MainWindow::btnClearPressed()
+{
+    particlesScene->clear();
 }
 
 bool MainWindow::validateLnInput() {
@@ -258,6 +267,48 @@ void MainWindow::saveJsonFile()
     file.write(document.toJson());
 
     file.close();
+}
+
+void MainWindow::sortAscending()
+{
+   // THX TONY.
+   sort(particles.begin(), particles.end(),
+        [](QMap<QString, int> m1, QMap<QString, int> m2)
+   {
+        auto speed1 = m1["velocidad"];
+        auto speed2 = m2["velocidad"];
+
+        if(speed1 > speed2) {
+            return true;
+        }
+
+        return false;
+   });
+}
+
+void MainWindow::sortDescending()
+{
+    sort(particles.begin(), particles.end(),
+         [&](QMap<QString, int> m1, QMap<QString, int> m2)
+    {
+        auto M1origX = m1["origen X"];
+        auto M1origY = m1["origen Y"];
+        auto M1destX = m1["destino X"];
+        auto M1destY = m1["destino Y"];
+        double M1distance = computeEuclideanDist(M1origX, M1origY, M1destX, M1destY);
+
+        auto M2origX = m2["origen X"];
+        auto M2origY = m2["origen Y"];
+        auto M2destX = m2["destino X"];
+        auto M2destY = m2["destino Y"];
+        double M2distance = computeEuclideanDist(M2origX, M2origY, M2destX, M2destY);
+
+        if(M1distance > M2distance) {
+            return true;
+        }
+
+        return false;
+    });
 }
 
 int MainWindow::tabSelected()
@@ -406,19 +457,33 @@ QVector<QMap<QString, int> > MainWindow::getParticlesByID()
 
 void MainWindow::drawParticles()
 {
-    QGraphicsScene *scene = new QGraphicsScene(this);
+    particlesScene = new QGraphicsScene(this);
     QPen pen;
     pen.setWidth(2);
-    ui->gphViewGraph->setScene(scene);
+    ui->gphViewGraph->setScene(particlesScene);
 
     foreach(const auto &particle, particles) {
         QColor particleColor;
         particleColor.setRgb(particle["R"], particle["G"], particle["B"]);
         pen.setColor(particleColor);
-        scene->addLine(particle["origen X"], particle["origen Y"],
+        particlesScene->addLine(particle["origen X"], particle["origen Y"],
                        particle["destino X"], particle["destino Y"], pen);
     }
 }
+
+//void MainWindow::wheelEvent(QWheelEvent *event)
+//{
+    // WORKS
+//    const QPointF p0scene = ui->gphViewGraph->mapToScene(event->pos());
+
+//        qreal factor = qPow(1.2, event->delta() / 240.0);
+//        ui->gphViewGraph->scale(factor, factor);
+
+//        const QPointF p1mouse = ui->gphViewGraph->mapFromScene(p0scene);
+//        const QPointF move = p1mouse - event->pos(); // The move
+//        ui->horizontalScrollBar->setValue(move.x() + ui->horizontalScrollBar->value());
+//        ui->verticalScrollBar->setValue(move.y() + ui->verticalScrollBar->value());
+//}
 
 void MainWindow::cleanFields() {
     QRegularExpression expLnEdt("lnEdt");

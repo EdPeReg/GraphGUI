@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QtMath>
+#include <QMatrix>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QRegularExpression>
@@ -14,8 +16,12 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QGraphicsScene>
+#include <QGraphicsView>
+#include <algorithm>
 
-#include "showinformation.h"
+//#include <QWheelEvent>
+
+//#include "showinformation.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -35,6 +41,7 @@ private slots:
     void btnParticleTable();
     void btnSearchID();
     void btnDrawPressed();
+    void btnClearPressed();
 
 private:
     Ui::MainWindow *ui;
@@ -46,6 +53,7 @@ private:
 
     QVector<QMap<QString, int>> particles;
     QMap<QString, int> particleInformation;
+    QGraphicsScene *particlesScene;
     bool particleExist;
     bool isBtnShowParticlePressed;
 
@@ -54,6 +62,12 @@ private:
 
     /* Saves the particle information into a json file. */
     void saveJsonFile();
+
+    /* Sort the particles in ascending order, using the speed. */
+    void sortAscending();
+
+    /* Sort the particles in descending order, using the distance. */
+    void sortDescending();
 
     /* To know which tab is selected.
      * @return Returns the index of the tab selected. */
@@ -90,6 +104,8 @@ private:
 
     /* Draw the particles as lines. */
     void drawParticles();
+
+//    void wheelEvent(QWheelEvent *event) ;
 
     /* Clean each field. */
     void cleanFields();
