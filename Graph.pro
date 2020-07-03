@@ -18,10 +18,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
+    particle.cpp \
     showinformation.cpp
 
 HEADERS += \
     mainwindow.h \
+    particle.h \
     showinformation.h
 
 FORMS += \

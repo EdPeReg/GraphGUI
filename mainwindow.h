@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QtMath>
-#include <QMatrix>
+#include <QVector>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QRegularExpression>
@@ -23,7 +23,7 @@
 
 //#include <QWheelEvent>
 
-//#include "showinformation.h"
+//#include "particle.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -54,7 +54,7 @@ private:
     };
 
     QVector<QMap<QString, int>> particles;
-    QMap<QString, int> particleInformation;
+    QMap<QString, int> particle;
     QGraphicsScene *particlesScene;
     bool particleExist;
     bool isBtnShowParticlePressed;
@@ -76,7 +76,7 @@ private:
     void sortDescending();
 
     /* To know which tab is selected.
-     * @return Returns the index of the tab selected. */
+     * @return the index of the tab selected. */
     int tabSelected();
 
     /* Validate the fields information depending of the current tab selected. */
@@ -116,6 +116,7 @@ private:
     /* Clean each field. */
     void cleanFields();
 
+    /* Compute the distance between two points. */
     double computeEuclideanDist(double orgX, double orgY, double destX, double destY);
 
 };

@@ -5,6 +5,7 @@ using namespace std;
 
 // TODO
 // - Able to do zoom in our graphics view.
+// - When there is a bar graph showed, able to hover a bar and say what particle belongs.
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,10 +18,6 @@ MainWindow::MainWindow(QWidget *parent)
     , isBtnBarGraphParticlesPressed(false)
 {
     ui->setupUi(this);
-
-    if(ui->tabWidget->currentIndex() == 0) {
-        tabSelected();
-    }
 
     ui->spBxColorR->setMaximum(255);
     ui->spBxColorG->setMaximum(255);
@@ -190,16 +187,16 @@ QObjectList MainWindow::getWidgetsTab()
 }
 
 void MainWindow::setParticlesInformation() {
-    particleInformation["id"] = ui->lnEdtID->text().toInt();
-    particleInformation["origen X"] = ui->lnEdtOrigX->text().toInt();
-    particleInformation["origen Y"] = ui->lnEdtOrigY->text().toInt();
-    particleInformation["destino X"] = ui->lnEdtDestX->text().toInt();
-    particleInformation["destino Y"] = ui->lnEdtDestY->text().toInt();
-    particleInformation["velocidad"] = ui->lnEdtSpeed->text().toInt();
-    particleInformation["R"] = ui->spBxColorR->value();
-    particleInformation["G"] = ui->spBxColorG->value();
-    particleInformation["B"] = ui->spBxColorB->value();
-    particles.push_back(particleInformation);
+    particle["id"] = ui->lnEdtID->text().toInt();
+    particle["origen X"] = ui->lnEdtOrigX->text().toInt();
+    particle["origen Y"] = ui->lnEdtOrigY->text().toInt();
+    particle["destino X"] = ui->lnEdtDestX->text().toInt();
+    particle["destino Y"] = ui->lnEdtDestY->text().toInt();
+    particle["velocidad"] = ui->lnEdtSpeed->text().toInt();
+    particle["R"] = ui->spBxColorR->value();
+    particle["G"] = ui->spBxColorG->value();
+    particle["B"] = ui->spBxColorB->value();
+    particles.push_back(particle);
 }
 
 void MainWindow::setParticlesInformation(const QJsonArray &jsonDocumentArray)
@@ -207,23 +204,23 @@ void MainWindow::setParticlesInformation(const QJsonArray &jsonDocumentArray)
     foreach(const QJsonValue &value, jsonDocumentArray) {
         QJsonObject obj = value.toObject();
 
-        particleInformation["id"] = obj["id"].toInt();
+        particle["id"] = obj["id"].toInt();
 
         QJsonObject obj2 = obj.value("origen").toObject();
-        particleInformation["origen X"] = obj2["x"].toInt();
-        particleInformation["origen Y"] = obj2["y"].toInt();
+        particle["origen X"] = obj2["x"].toInt();
+        particle["origen Y"] = obj2["y"].toInt();
 
         obj2 = obj.value("destino").toObject();
-        particleInformation["destino X"] = obj2["x"].toInt();
-        particleInformation["destino Y"] = obj2["y"].toInt();
-        particleInformation["velocidad"] = obj["velocidad"].toInt();
+        particle["destino X"] = obj2["x"].toInt();
+        particle["destino Y"] = obj2["y"].toInt();
+        particle["velocidad"] = obj["velocidad"].toInt();
 
         obj2 = obj.value("color").toObject();
-        particleInformation["R"] = obj2["red"].toInt();
-        particleInformation["G"] = obj2["green"].toInt();
-        particleInformation["B"] = obj2["blue"].toInt();
+        particle["R"] = obj2["red"].toInt();
+        particle["G"] = obj2["green"].toInt();
+        particle["B"] = obj2["blue"].toInt();
 
-        particles.push_back(particleInformation);
+        particles.push_back(particle);
     }
 }
 
