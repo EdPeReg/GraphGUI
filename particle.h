@@ -1,10 +1,13 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
+#include <cmath>
+
 class Particle
 {
 public:
     Particle();
+//    Particle(const Particle& particle);
 
     void setId(int id);
     void setOrigX(int origX);
@@ -25,6 +28,9 @@ public:
     short getRed() const;
     short getGreen() const;
     short getBlue() const;
+
+    /* Compute the distance between two points. */
+    double computeEuclideanDist(double orgX, double orgY, double destX, double destY);
 
 private:
     int id;

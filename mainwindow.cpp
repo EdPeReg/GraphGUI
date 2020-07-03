@@ -10,6 +10,8 @@ using namespace std;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , particle(nullptr)
+    , particles(0)
     , particleExist(false)
     , isBtnShowParticlePressed(false)
     , isAscendingPressed(false)
@@ -41,6 +43,10 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+
+    foreach(auto &particle, particles) {
+        delete particle;
+    }
 }
 
 void MainWindow::btnSavePressed() {
@@ -61,40 +67,33 @@ void MainWindow::btnShowPressed() {
     foreach(const auto &particle, particles) {
         QString aux2 = "Particula: " + QString::number(i + 1);
         ui->txtEdtParticleInfo->append(aux2);
-        auto id = particle.find("id");
-        auto origX = particle.find("origen X");
-        auto origY = particle.find("origen Y");
-        auto destX = particle.find("destino X");
-        auto destY = particle.find("destino Y");
-        auto velocidad = particle.find("velocidad");
-        auto red = particle.find("R");
-        auto green = particle.find("G");
-        auto blue = particle.find("B");
-        double distance = computeEuclideanDist(*origX, *origY, *destX, *destY);
+        double distance = particle->computeEuclideanDist(particle->getOrigX(),
+                                               particle->getOrigY(),
+                                               particle->getDestX(),
+                                               particle->getDestY());
 
-        QString value = QString::number(id.value());
-        ui->txtEdtParticleInfo->append(id.key() + " : " + value);
-        value = QString::number(origX.value());
-        ui->txtEdtParticleInfo->append(origX.key() + " : " + value);
-        value = QString::number(origY.value());
-        ui->txtEdtParticleInfo->append(origY.key() + " : " + value);
-        value = QString::number(destX.value());
-        ui->txtEdtParticleInfo->append(destX.key() + " : " + value);
-        value = QString::number(destY.value());
-        ui->txtEdtParticleInfo->append(destY.key() + " : " + value);
-        value = QString::number(velocidad.value());
-        ui->txtEdtParticleInfo->append(velocidad.key() + " : " + value);
-        value = QString::number(red.value());
-        ui->txtEdtParticleInfo->append(red.key() + " : " + value);
-        value = QString::number(green.value());
-        ui->txtEdtParticleInfo->append(green.key() + " : " + value);
-        value = QString::number(blue.value());
-        ui->txtEdtParticleInfo->append(blue.key() + " : " + value);
+        QString value = QString::number(particle->getId());
+        ui->txtEdtParticleInfo->append("ID : " + value);
+        value = QString::number(particle->getOrigX());
+        ui->txtEdtParticleInfo->append("Origin X : " + value);
+        value = QString::number(particle->getOrigY());
+        ui->txtEdtParticleInfo->append("Origin Y : " + value);
+        value = QString::number(particle->getDestX());
+        ui->txtEdtParticleInfo->append("Destination X : " + value);
+        value = QString::number(particle->getDestY());
+        ui->txtEdtParticleInfo->append("Destination Y : " + value);
+        value = QString::number(particle->getSpeed());
+        ui->txtEdtParticleInfo->append("Speed : " + value);
+        value = QString::number(particle->getRed());
+        ui->txtEdtParticleInfo->append("Color Red : " + value);
+        value = QString::number(particle->getGreen());
+        ui->txtEdtParticleInfo->append("Color Green : " + value);
+        value = QString::number(particle->getBlue());
+        ui->txtEdtParticleInfo->append("Color Blue : " + value);
         value = QString::number(distance);
         QString auxStr = "Distancia euclidiana";
-        ui->txtEdtParticleInfo->append(auxStr + " : " + value);
+        ui->txtEdtParticleInfo->append("Euclidean Distance : " + value);
         ui->txtEdtParticleInfo->append("\n");
-
         i++;
     }
 
@@ -117,7 +116,7 @@ void MainWindow::btnSearchID() {
         // If the id doesn't exist, it will remain true, causing that the qmessagebox
         // doesn't appear.
         particleExist = false;
-        QVector< QMap<QString, int> > localParticles = getParticlesByID();
+        QVector<Particle *> localParticles = getParticlesByID();
 
         if(!particleExist) {
             QMessageBox::information(this, "Bad luck", "Particle doesn't exist");
@@ -187,38 +186,41 @@ QObjectList MainWindow::getWidgetsTab()
 }
 
 void MainWindow::setParticlesInformation() {
-    particle["id"] = ui->lnEdtID->text().toInt();
-    particle["origen X"] = ui->lnEdtOrigX->text().toInt();
-    particle["origen Y"] = ui->lnEdtOrigY->text().toInt();
-    particle["destino X"] = ui->lnEdtDestX->text().toInt();
-    particle["destino Y"] = ui->lnEdtDestY->text().toInt();
-    particle["velocidad"] = ui->lnEdtSpeed->text().toInt();
-    particle["R"] = ui->spBxColorR->value();
-    particle["G"] = ui->spBxColorG->value();
-    particle["B"] = ui->spBxColorB->value();
+    particle = new Particle;
+    particle->setId(ui->lnEdtID->text().toInt());
+    particle->setOrigX(ui->lnEdtOrigX->text().toInt());
+    particle->setOrigY(ui->lnEdtOrigY->text().toInt());
+    particle->setDestX(ui->lnEdtDestX->text().toInt());
+    particle->setDestY(ui->lnEdtDestY->text().toInt());
+    particle->setSpeed(ui->lnEdtSpeed->text().toInt());
+    particle->setRed(ui->spBxColorR->value());
+    particle->setGreen(ui->spBxColorG->value());
+    particle->setBlue(ui->spBxColorB->value());
     particles.push_back(particle);
 }
 
 void MainWindow::setParticlesInformation(const QJsonArray &jsonDocumentArray)
 {
     foreach(const QJsonValue &value, jsonDocumentArray) {
+        // Remember, each particle needs a single memory allocation.
+        particle = new Particle;
         QJsonObject obj = value.toObject();
 
-        particle["id"] = obj["id"].toInt();
+        particle->setId(obj["id"].toInt());
 
         QJsonObject obj2 = obj.value("origen").toObject();
-        particle["origen X"] = obj2["x"].toInt();
-        particle["origen Y"] = obj2["y"].toInt();
+        particle->setOrigX(obj2["x"].toInt());
+        particle->setOrigY(obj2["y"].toInt());
 
         obj2 = obj.value("destino").toObject();
-        particle["destino X"] = obj2["x"].toInt();
-        particle["destino Y"] = obj2["y"].toInt();
-        particle["velocidad"] = obj["velocidad"].toInt();
+        particle->setDestX(obj2["x"].toInt());
+        particle->setDestY(obj2["y"].toInt());
+        particle->setSpeed(obj["velocidad"].toInt());
 
         obj2 = obj.value("color").toObject();
-        particle["R"] = obj2["red"].toInt();
-        particle["G"] = obj2["green"].toInt();
-        particle["B"] = obj2["blue"].toInt();
+        particle->setRed(obj2["red"].toInt());
+        particle->setGreen(obj2["green"].toInt());
+        particle->setBlue(obj2["blue"].toInt());
 
         particles.push_back(particle);
     }
@@ -275,16 +277,9 @@ void MainWindow::sortAscending()
    isAscendingPressed = true;
    // THX TONY.
    sort(particles.begin(), particles.end(),
-        [](QMap<QString, int> m1, QMap<QString, int> m2)
+        [](Particle *p1, Particle *p2)
    {
-        auto speed1 = m1["velocidad"];
-        auto speed2 = m2["velocidad"];
-
-        if(speed1 < speed2) {
-            return true;
-        }
-
-        return false;
+       return p1->getSpeed() < p2->getSpeed();
    });
 }
 
@@ -293,25 +288,19 @@ void MainWindow::sortDescending()
     isDescendingPressed = true;
     isAscendingPressed = false;
     sort(particles.begin(), particles.end(),
-         [&](QMap<QString, int> m1, QMap<QString, int> m2)
+         [&](Particle *p1, Particle *p2)
     {
-        auto M1origX = m1["origen X"];
-        auto M1origY = m1["origen Y"];
-        auto M1destX = m1["destino X"];
-        auto M1destY = m1["destino Y"];
-        double M1distance = computeEuclideanDist(M1origX, M1origY, M1destX, M1destY);
+        double p1Distance = particle->computeEuclideanDist(p1->getOrigX(),
+                                                           p1->getOrigY(),
+                                                           p1->getDestX(),
+                                                           p1->getDestY());
 
-        auto M2origX = m2["origen X"];
-        auto M2origY = m2["origen Y"];
-        auto M2destX = m2["destino X"];
-        auto M2destY = m2["destino Y"];
-        double M2distance = computeEuclideanDist(M2origX, M2origY, M2destX, M2destY);
+        double p2Distance = particle->computeEuclideanDist(p2->getOrigX(),
+                                                           p2->getOrigY(),
+                                                           p2->getDestX(),
+                                                           p2->getDestY());
 
-        if(M1distance > M2distance) {
-            return true;
-        }
-
-        return false;
+        return p1Distance > p2Distance;
     });
 }
 
@@ -339,24 +328,24 @@ QJsonArray MainWindow::particlesToJsonArray()
     QJsonObject secondaryObject;
 
     foreach(const auto &particle, particles) {
-        secondaryObject.insert("blue", particle["B"]);
-        secondaryObject.insert("green", particle["G"]);
-        secondaryObject.insert("red", particle["R"]);
+        secondaryObject.insert("blue", particle->getBlue());
+        secondaryObject.insert("green", particle->getGreen());
+        secondaryObject.insert("red", particle->getRed());
         mainObject.insert("color", secondaryObject);
         // Clear object because the previous values still there.
         secondaryObject = QJsonObject();
 
-        secondaryObject.insert("y", particle["destino Y"]);
-        secondaryObject.insert("x", particle["destino X"]);
+        secondaryObject.insert("y", particle->getDestY());
+        secondaryObject.insert("x", particle->getDestX());
         mainObject.insert("destino", secondaryObject);
 
-        secondaryObject.insert("y", particle["origen Y"]);
-        secondaryObject.insert("x", particle["origen X"]);
+        secondaryObject.insert("y", particle->getDestY());
+        secondaryObject.insert("x", particle->getDestX());
         mainObject.insert("origen", secondaryObject);
         secondaryObject = QJsonObject();
 
-        mainObject.insert("id", particle["id"]);
-        mainObject.insert("velocidad", particle["velocidad"]);
+        mainObject.insert("id", particle->getId());
+        mainObject.insert("velocidad", particle->getSpeed());
 
         jsonArray.insert(i, mainObject);
 
@@ -366,7 +355,7 @@ QJsonArray MainWindow::particlesToJsonArray()
     return jsonArray;
 }
 
-void MainWindow::setParticleTable(QVector< QMap<QString, int> > particles)
+void MainWindow::setParticleTable(QVector<Particle *> particles)
 {
     // If the button that do the search by ID is not pressed, we are going to use
     // our global particles, not the local particles, remember that local particles
@@ -386,37 +375,33 @@ void MainWindow::setParticleTable(QVector< QMap<QString, int> > particles)
     int row = 0;
 
     foreach(const auto &particle, particles) {
-        // The reason why I did this to find their value, it was because somehow, if I use
-        // particle["origen X"] and so on, the values are different, and the distance will
-        // be also different, why? I don't know.
-        // Doing this, the distance now will be correct.
-        auto origX = particle.find("origen X");
-        auto origY = particle.find("origen Y");
-        auto destX = particle.find("destino X");
-        auto destY = particle.find("destino Y");
-        double distance = computeEuclideanDist(*origX, *origY, *destX, *destY);
+//        qDebug() << "id: " << particle->getId() << "\n";
+        double distance = particle->computeEuclideanDist(particle->getOrigX(),
+                                               particle->getOrigY(),
+                                               particle->getDestX(),
+                                               particle->getDestY());
 
-        QString item = QString::number(particle["id"]);
+        QString item = QString::number(particle->getId());
         QTableWidgetItem *itemID = new QTableWidgetItem(item);
 
-        item = QString::number(particle["origen X"]);
+        item = QString::number(particle->getOrigX());
         QTableWidgetItem *itemOrigX = new QTableWidgetItem(item);
-        item = QString::number(particle["origen Y"]);
+        item = QString::number(particle->getOrigY());
         QTableWidgetItem *itemOrigY = new QTableWidgetItem(item);
 
-        item = QString::number(particle["destino X"]);
+        item = QString::number(particle->getDestX());
         QTableWidgetItem *itemDestX = new QTableWidgetItem(item);
-        item = QString::number(particle["destino Y"]);
+        item = QString::number(particle->getDestY());
         QTableWidgetItem *itemDestY = new QTableWidgetItem(item);
 
-        item = QString::number(particle["velocidad"]);
+        item = QString::number(particle->getSpeed());
         QTableWidgetItem *itemVel = new QTableWidgetItem(item);
 
-        item = QString::number(particle["R"]);
+        item = QString::number(particle->getRed());
         QTableWidgetItem *itemRed = new QTableWidgetItem(item);
-        item = QString::number(particle["G"]);
+        item = QString::number(particle->getGreen());
         QTableWidgetItem *itemGreen = new QTableWidgetItem(item);
-        item = QString::number(particle["B"]);
+        item = QString::number(particle->getBlue());
         QTableWidgetItem *itemBlue = new QTableWidgetItem(item);
 
         item = QString::number(distance);
@@ -437,19 +422,17 @@ void MainWindow::setParticleTable(QVector< QMap<QString, int> > particles)
     }
 }
 
-QVector<QMap<QString, int> > MainWindow::getParticlesByID()
+QVector<Particle *> MainWindow::getParticlesByID()
 {
-    QVector< QMap<QString, int> > localParticles;
-    QMap<QString, int> element;
+    QVector<Particle *> localParticles;
+    Particle *element = new Particle;
 
     // Get user input.
     QString idStr = ui->lnEdtSearchID->text();
     int userID = idStr.toInt();
 
     foreach(const auto &particle, particles) {
-        auto particleID = particle.find("id");
-
-        if(userID == particleID.value()) {
+        if(userID == particle->getId()) {
             particleExist = true;
             element = particle;
             localParticles.push_back(element);
@@ -493,51 +476,58 @@ void MainWindow::drawParticles()
         QColor particleColor;
 
         if(isBtnGraphParticlesPressed) {
-            particleColor.setRgb(particle["R"], particle["G"], particle["B"]);
+            particleColor.setRgb(particle->getRed(),
+                                 particle->getGreen(),
+                                 particle->getBlue());
             pen.setColor(particleColor);
-            particlesScene->addLine(particle["origen X"], particle["origen Y"],
-                           particle["destino X"], particle["destino Y"], pen);
+            particlesScene->addLine(particle->getOrigX(),
+                                    particle->getOrigY(),
+                                    particle->getDestX(),
+                                    particle->getDestY(), pen);
         } else if(isBtnBarGraphParticlesPressed){
             if(isAscendingPressed) {
-                particleColor.setRgb(particle["R"], particle["G"], particle["B"]);
+                particleColor.setRgb(particle->getRed(),
+                                     particle->getGreen(),
+                                     particle->getBlue());
                 pen.setColor(particleColor);
                 pen.setWidth(4);
-                particlesScene->addLine(0, j, particle["velocidad"], j, pen);
+                particlesScene->addLine(0, j, particle->getSpeed(), j, pen);
             } else if(isDescendingPressed){
-                particleColor.setRgb(particle["R"], particle["G"], particle["B"]);
+                particleColor.setRgb(particle->getRed(),
+                                     particle->getGreen(),
+                                     particle->getBlue());
                 pen.setColor(particleColor);
                 pen.setWidth(4);
-                auto origX = particle["origen X"];
-                auto origY = particle["origen Y"];
-                auto destX = particle["destino X"];
-                auto destY = particle["destino Y"];
-                double distance = computeEuclideanDist(origX, origY, destX, destY);
+                double distance = particle->computeEuclideanDist(particle->getOrigX(),
+                                                       particle->getOrigY(),
+                                                       particle->getDestX(),
+                                                       particle->getDestY());
 
                 particlesScene->addLine(0, j, distance, j, pen);
             } else {
-                particleColor.setRgb(particle["R"], particle["G"], particle["B"]);
+                particleColor.setRgb(particle->getRed(), particle->getRed(), particle->getBlue());
                 pen.setColor(particleColor);
                 pen.setWidth(4);
-                particlesScene->addLine(0, j, particle["destino X"], j, pen);
+                particlesScene->addLine(0, j, particle->getDestX(), j, pen);
             }
         }
         j += 5;
     }
 }
 
-//void MainWindow::wheelEvent(QWheelEvent *event)
-//{
-    // WORKS
-//    const QPointF p0scene = ui->gphViewGraph->mapToScene(event->pos());
+////void MainWindow::wheelEvent(QWheelEvent *event)
+////{
+//    // WORKS
+////    const QPointF p0scene = ui->gphViewGraph->mapToScene(event->pos());
 
-//        qreal factor = qPow(1.2, event->delta() / 240.0);
-//        ui->gphViewGraph->scale(factor, factor);
+////        qreal factor = qPow(1.2, event->delta() / 240.0);
+////        ui->gphViewGraph->scale(factor, factor);
 
-//        const QPointF p1mouse = ui->gphViewGraph->mapFromScene(p0scene);
-//        const QPointF move = p1mouse - event->pos(); // The move
-//        ui->horizontalScrollBar->setValue(move.x() + ui->horizontalScrollBar->value());
-//        ui->verticalScrollBar->setValue(move.y() + ui->verticalScrollBar->value());
-//}
+////        const QPointF p1mouse = ui->gphViewGraph->mapFromScene(p0scene);
+////        const QPointF move = p1mouse - event->pos(); // The move
+////        ui->horizontalScrollBar->setValue(move.x() + ui->horizontalScrollBar->value());
+////        ui->verticalScrollBar->setValue(move.y() + ui->verticalScrollBar->value());
+////}
 
 void MainWindow::cleanFields() {
     QRegularExpression expLnEdt("lnEdt");
@@ -554,10 +544,4 @@ void MainWindow::cleanFields() {
         QSpinBox *spBox = qobject_cast<QSpinBox*>(widgetSpBox);
         spBox->setValue(0);
     }
-}
-
-double MainWindow::computeEuclideanDist(double orgX, double orgY, double destX, double destY)
-{
-    double distance = sqrt(pow(destX - orgX, 2) + pow(destY - orgY, 2));
-    return distance;
 }
