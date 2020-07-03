@@ -11,6 +11,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , particleExist(false)
     , isBtnShowParticlePressed(false)
+    , isAscendingPressed(false)
+    , isDescendingPressed(false)
+    , isBtnGraphParticlesPressed(false)
+    , isBtnBarGraphParticlesPressed(false)
 {
     ui->setupUi(this);
 
@@ -271,6 +275,7 @@ void MainWindow::saveJsonFile()
 
 void MainWindow::sortAscending()
 {
+   isAscendingPressed = true;
    // THX TONY.
    sort(particles.begin(), particles.end(),
         [](QMap<QString, int> m1, QMap<QString, int> m2)
@@ -278,7 +283,7 @@ void MainWindow::sortAscending()
         auto speed1 = m1["velocidad"];
         auto speed2 = m2["velocidad"];
 
-        if(speed1 > speed2) {
+        if(speed1 < speed2) {
             return true;
         }
 
@@ -288,6 +293,8 @@ void MainWindow::sortAscending()
 
 void MainWindow::sortDescending()
 {
+    isDescendingPressed = true;
+    isAscendingPressed = false;
     sort(particles.begin(), particles.end(),
          [&](QMap<QString, int> m1, QMap<QString, int> m2)
     {
@@ -458,16 +465,66 @@ QVector<QMap<QString, int> > MainWindow::getParticlesByID()
 void MainWindow::drawParticles()
 {
     particlesScene = new QGraphicsScene(this);
+    particlesScene->clear();
     QPen pen;
     pen.setWidth(2);
     ui->gphViewGraph->setScene(particlesScene);
 
+    QMessageBox msgBox;
+    QPushButton *btnParticlesGraph = msgBox.addButton("Particles Graph", QMessageBox::ActionRole);
+    QPushButton *btnBarGraph = msgBox.addButton("Bar Graph", QMessageBox::ActionRole);
+    QPushButton *btnCancel = msgBox.addButton("Cancel", QMessageBox::RejectRole);
+
+    //  REALLY ?????
+    msgBox.setText("                          Drawing option");
+
+    msgBox.exec();
+    if(msgBox.clickedButton() == btnParticlesGraph) {
+        isBtnGraphParticlesPressed = true;
+        isBtnBarGraphParticlesPressed = false;
+    } else if(msgBox.clickedButton() == btnBarGraph) {
+        isBtnBarGraphParticlesPressed = true;
+        isBtnGraphParticlesPressed = false;
+    }
+    // IS THIS THE ONLY WAY TO MAKE THE WINDOW CLOSE WITH THE X?
+    else if(msgBox.clickedButton() == btnCancel) {
+
+    }
+
+    int j = 0;
     foreach(const auto &particle, particles) {
         QColor particleColor;
-        particleColor.setRgb(particle["R"], particle["G"], particle["B"]);
-        pen.setColor(particleColor);
-        particlesScene->addLine(particle["origen X"], particle["origen Y"],
-                       particle["destino X"], particle["destino Y"], pen);
+
+        if(isBtnGraphParticlesPressed) {
+            particleColor.setRgb(particle["R"], particle["G"], particle["B"]);
+            pen.setColor(particleColor);
+            particlesScene->addLine(particle["origen X"], particle["origen Y"],
+                           particle["destino X"], particle["destino Y"], pen);
+        } else if(isBtnBarGraphParticlesPressed){
+            if(isAscendingPressed) {
+                particleColor.setRgb(particle["R"], particle["G"], particle["B"]);
+                pen.setColor(particleColor);
+                pen.setWidth(4);
+                particlesScene->addLine(0, j, particle["velocidad"], j, pen);
+            } else if(isDescendingPressed){
+                particleColor.setRgb(particle["R"], particle["G"], particle["B"]);
+                pen.setColor(particleColor);
+                pen.setWidth(4);
+                auto origX = particle["origen X"];
+                auto origY = particle["origen Y"];
+                auto destX = particle["destino X"];
+                auto destY = particle["destino Y"];
+                double distance = computeEuclideanDist(origX, origY, destX, destY);
+
+                particlesScene->addLine(0, j, distance, j, pen);
+            } else {
+                particleColor.setRgb(particle["R"], particle["G"], particle["B"]);
+                pen.setColor(particleColor);
+                pen.setWidth(4);
+                particlesScene->addLine(0, j, particle["destino X"], j, pen);
+            }
+        }
+        j += 5;
     }
 }
 

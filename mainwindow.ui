@@ -215,12 +215,12 @@
   </action>
   <action name="action_Ascending">
    <property name="text">
-    <string>&amp;Ascending</string>
+    <string>&amp;Ascending (speed)</string>
    </property>
   </action>
   <action name="action_Descending">
    <property name="text">
-    <string>&amp;Descending</string>
+    <string>&amp;Descending (distance)</string>
    </property>
   </action>
  </widget>

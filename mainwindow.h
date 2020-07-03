@@ -18,6 +18,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <algorithm>
+#include <QPushButton>
+#include <QCloseEvent>
 
 //#include <QWheelEvent>
 
@@ -56,6 +58,10 @@ private:
     QGraphicsScene *particlesScene;
     bool particleExist;
     bool isBtnShowParticlePressed;
+    bool isAscendingPressed;
+    bool isDescendingPressed;
+    bool isBtnGraphParticlesPressed;
+    bool isBtnBarGraphParticlesPressed;
 
     /* Open the user's json file. */
     void openJsonFile();
