@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <QPushButton>
 
+#include <QPair>
 #include <QCloseEvent>
 #include <QMouseEvent>
 #include <QGraphicsSceneMouseEvent>
@@ -26,6 +27,21 @@
 //#include <QWheelEvent>
 
 #include "particle.h"
+
+struct Node {
+    Particle * origin;
+    Particle *dest;
+    double distance;
+
+    Node() { }
+
+    Node(Particle *orig, Particle *d, double dist) : origin(orig), dest(d), distance(dist) { }
+
+    ~Node() {
+        delete origin;
+        delete dest;
+    }
+};
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -56,7 +72,9 @@ private:
     };
 
     Particle *particle;
+    Node *node;
     QVector<Particle *> particles;
+    QVector<Node *> nodes;
 
     QGraphicsScene *particlesScene;
     bool particleExist;
