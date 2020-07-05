@@ -219,8 +219,15 @@
     <addaction name="action_Ascending"/>
     <addaction name="action_Descending"/>
    </widget>
+   <widget class="QMenu" name="menuAlgorithms">
+    <property name="title">
+     <string>&amp;Algorithms</string>
+    </property>
+    <addaction name="action_Closest_Points"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Sorting"/>
+   <addaction name="menuAlgorithms"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_Open">
@@ -241,6 +248,11 @@
   <action name="action_Descending">
    <property name="text">
     <string>&amp;Descending (distance)</string>
+   </property>
+  </action>
+  <action name="action_Closest_Points">
+   <property name="text">
+    <string>&amp;Closest Points</string>
    </property>
   </action>
  </widget>

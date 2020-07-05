@@ -32,3 +32,32 @@ double Particle::computeEuclideanDist(double orgX, double orgY, double destX, do
     double distance = sqrt(pow(destX - orgX, 2) + pow(destY - orgY, 2));
     return distance;
 }
+
+void Particle::sortAscending(QVector<Particle *> &particles)
+{
+   // THX TONY.
+   std::sort(particles.begin(), particles.end(),
+        [](Particle *p1, Particle *p2)
+   {
+       return p1->getSpeed() < p2->getSpeed();
+   });
+}
+
+void Particle::sortDescending(QVector<Particle *> &particles)
+{
+    std::sort(particles.begin(), particles.end(),
+         [&](Particle *p1, Particle *p2)
+    {
+        double p1Distance = computeEuclideanDist(p1->getOrigX(),
+                                                           p1->getOrigY(),
+                                                           p1->getDestX(),
+                                                           p1->getDestY());
+
+        double p2Distance = computeEuclideanDist(p2->getOrigX(),
+                                                           p2->getOrigY(),
+                                                           p2->getDestX(),
+                                                           p2->getDestY());
+
+        return p1Distance > p2Distance;
+    });
+}

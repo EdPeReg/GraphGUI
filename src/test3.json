@@ -1,0 +1,36 @@
+[
+     {
+          "color": {
+               "blue": 0,
+               "green": 0,
+               "red": 0
+          },
+          "destino": {
+               "y": 11,
+               "x": 24
+          },
+          "origen": {
+               "y": 23,
+               "x": 31
+          },
+          "id": 2,
+          "velocidad": 2.0
+     },
+     {
+          "color": {
+               "blue": 212,
+               "green": 220,
+               "red": 255
+          },
+          "destino": {
+               "y": 222,
+               "x": 313
+          },
+          "origen": {
+               "y": 123,
+               "x": 242
+          },
+          "id": 123,
+          "velocidad": 1.0
+     }
+]

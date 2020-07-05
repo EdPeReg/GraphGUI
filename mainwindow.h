@@ -7,7 +7,6 @@
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QDebug>
-#include <QMap>
 #include <QString>
 #include <QFile>
 #include <QFileDialog>
@@ -18,7 +17,11 @@
 #include <QGraphicsView>
 #include <algorithm>
 #include <QPushButton>
+
 #include <QCloseEvent>
+#include <QMouseEvent>
+#include <QGraphicsSceneMouseEvent>
+
 
 //#include <QWheelEvent>
 
@@ -112,6 +115,10 @@ private:
 
     /* Draw the particles as lines. */
     void drawParticles();
+
+    void drawClosesParticles();
+
+//    void mouseMoveEvent(QMouseEvent  *event) override;
 
 ////    void wheelEvent(QWheelEvent *event) ;
 

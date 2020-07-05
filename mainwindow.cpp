@@ -25,8 +25,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->spBxColorG->setMaximum(255);
     ui->spBxColorB->setMaximum(255);
 
-    ui->txtEdtParticleInfo->setReadOnly(true);
-
     connect(ui->btnSave, &QPushButton::clicked, this, &MainWindow::btnSavePressed);
     connect(ui->btnShow, &QPushButton::clicked, this, &MainWindow::btnShowPressed);
     connect(ui->btnShowParticleTable, &QPushButton::clicked, this, &MainWindow::btnParticleTable);
@@ -37,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->action_Save, &QAction::triggered, this, &MainWindow::saveJsonFile);
     connect(ui->action_Ascending, &QAction::triggered, this, &MainWindow::sortAscending);
     connect(ui->action_Descending, &QAction::triggered, this, &MainWindow::sortDescending);
+    connect(ui->action_Closest_Points, &QAction::triggered, this, &MainWindow::drawClosesParticles);
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::tabSelected);
 }
 
@@ -275,33 +274,15 @@ void MainWindow::saveJsonFile()
 void MainWindow::sortAscending()
 {
    isAscendingPressed = true;
-   // THX TONY.
-   sort(particles.begin(), particles.end(),
-        [](Particle *p1, Particle *p2)
-   {
-       return p1->getSpeed() < p2->getSpeed();
-   });
+   particle->sortAscending(particles);
+
 }
 
 void MainWindow::sortDescending()
 {
     isDescendingPressed = true;
     isAscendingPressed = false;
-    sort(particles.begin(), particles.end(),
-         [&](Particle *p1, Particle *p2)
-    {
-        double p1Distance = particle->computeEuclideanDist(p1->getOrigX(),
-                                                           p1->getOrigY(),
-                                                           p1->getDestX(),
-                                                           p1->getDestY());
-
-        double p2Distance = particle->computeEuclideanDist(p2->getOrigX(),
-                                                           p2->getOrigY(),
-                                                           p2->getDestX(),
-                                                           p2->getDestY());
-
-        return p1Distance > p2Distance;
-    });
+    particle->sortDescending(particles);
 }
 
 int MainWindow::tabSelected()
@@ -375,7 +356,6 @@ void MainWindow::setParticleTable(QVector<Particle *> particles)
     int row = 0;
 
     foreach(const auto &particle, particles) {
-//        qDebug() << "id: " << particle->getId() << "\n";
         double distance = particle->computeEuclideanDist(particle->getOrigX(),
                                                particle->getOrigY(),
                                                particle->getDestX(),
@@ -487,8 +467,8 @@ void MainWindow::drawParticles()
         } else if(isBtnBarGraphParticlesPressed){
             if(isAscendingPressed) {
                 particleColor.setRgb(particle->getRed(),
-                                     particle->getGreen(),
-                                     particle->getBlue());
+                             particle->getGreen(),
+                             particle->getBlue());
                 pen.setColor(particleColor);
                 pen.setWidth(4);
                 particlesScene->addLine(0, j, particle->getSpeed(), j, pen);
@@ -504,7 +484,7 @@ void MainWindow::drawParticles()
                                                        particle->getDestY());
 
                 particlesScene->addLine(0, j, distance, j, pen);
-            } else {
+            } else { // unsorted.
                 particleColor.setRgb(particle->getRed(), particle->getRed(), particle->getBlue());
                 pen.setColor(particleColor);
                 pen.setWidth(4);
@@ -514,6 +494,132 @@ void MainWindow::drawParticles()
         j += 5;
     }
 }
+
+void MainWindow::drawClosesParticles()
+{
+    QMap<double, Particle *> dicOrigOrig;
+    QMap<double, Particle *> dicOrigDest;
+    QMap<double, Particle *> dicDestDest;
+    QMap<double, Particle *> dicDestOrig;
+
+    QMap<double, Particle *>::iterator it;
+    QMap<double, Particle *>::iterator it2;
+    QMap<double, Particle *>::iterator it3;
+    QMap<double, Particle *>::iterator it4;
+
+    foreach(const auto &part, particles) {
+        foreach(const auto &particle, particles) {
+            qDebug() << "Particle: " << particle->getId() << "\n";
+            double distOrigOrig = particle->computeEuclideanDist(part->getOrigX(),
+                                                          part->getOrigY(),
+                                                          particle->getOrigX(),
+                                                          particle->getOrigY());
+            double distOrigDest = particle->computeEuclideanDist(part->getOrigX(),
+                                                          part->getOrigY(),
+                                                          particle->getDestX(),
+                                                          particle->getDestY());
+            double distDestDest = particle->computeEuclideanDist(part->getDestX(),
+                                                          part->getDestY(),
+                                                          particle->getDestX(),
+                                                          particle->getDestY());
+            double distDestOrig = particle->computeEuclideanDist(part->getDestX(),
+                                                          part->getDestY(),
+                                                          particle->getOrigX(),
+                                                          particle->getOrigY());
+
+            qDebug() << "Dist orig orig: " << distOrigOrig << "\n";
+            qDebug() << "Dist orig dest: " << distOrigDest << "\n";
+            qDebug() << "Dist dest dest: " << distDestDest << "\n";
+            qDebug() << "Dist dest orig: " << distDestOrig << "\n";
+
+
+            dicOrigOrig[distOrigOrig] = particle;
+            dicOrigDest[distOrigDest] = particle;
+            dicDestOrig[distDestOrig] = particle;
+            dicDestDest[distDestDest] = particle;
+
+            auto pos = dicOrigOrig.find(0);
+            dicOrigOrig.erase(pos);
+            pos = dicDestDest.find(0);
+            dicDestDest.erase(pos);
+
+            qDebug() << "dic orig orig: " << dicOrigOrig << "\n";
+            qDebug() << "dic orig dest: " << dicOrigDest << "\n";
+            qDebug() << "dic dest orig: " << dicDestOrig << "\n";
+            qDebug() << "dic dest dest: " << dicDestDest << "\n";
+        }
+
+
+    // BECAUSE OUR MAP IS ALREADY SORTED.
+    double minOrigOrig = dicOrigOrig.begin().key();
+    it = dicOrigOrig.begin();
+
+    double minOrigDest = dicOrigDest.begin().key();
+    it2 = dicOrigDest.begin();
+
+    double minDestOrig = dicDestOrig.begin().key();
+    it3 = dicDestOrig.begin();
+
+    double minDestDest = dicDestDest.begin().key();
+    it4 = dicDestDest.begin();
+
+    qDebug() << "min orig orig: " << minOrigOrig;
+    qDebug() << "min orig dest: " << minOrigDest;
+    qDebug() << "min dest orig: " << minDestOrig;
+    qDebug() << "min dest dest: " << minDestDest;
+
+    particlesScene = new QGraphicsScene(this);
+    particlesScene->clear();
+    QPen pen;
+    pen.setWidth(2);
+    ui->gphViewGraph->setScene(particlesScene);
+    QColor particleColor;
+
+    if(minOrigOrig < minOrigDest) {
+//		particleColor.setRgb(particle->getRed(),
+//							 particle->getGreen(),
+//							 particle->getBlue());
+//		pen.setColor(particleColor);
+
+
+
+        particlesScene->addLine(part->getOrigX(),
+                                part->getOrigY(),
+                                it.value()->getDestX(),
+                                it.value()->getDestY());
+    } else {
+        particlesScene->addLine(part->getOrigX(),
+                                part->getOrigY(),
+                                it2.value()->getDestX(),
+                                it2.value()->getDestY());
+    }
+
+    if(minDestOrig < minDestDest) {
+        particlesScene->addLine(part->getDestX(),
+                                part->getDestY(),
+                                it3.value()->getOrigX(),
+                                it3.value()->getOrigY());
+    } else {
+        particlesScene->addLine(part->getDestX(),
+                                part->getDestY(),
+                                it4.value()->getDestX(),
+                                it4.value()->getDestY());
+
+    }
+    dicOrigOrig.clear();
+    dicOrigDest.clear();
+    dicDestOrig.clear();
+    dicDestDest.clear();
+
+    }
+
+
+}
+
+//void MainWindow::mouseMoveEvent(QMouseEvent *event)
+//{
+//    qDebug() << event->pos();
+//}
 
 ////void MainWindow::wheelEvent(QWheelEvent *event)
 ////{
@@ -528,7 +634,6 @@ void MainWindow::drawParticles()
 ////        ui->horizontalScrollBar->setValue(move.x() + ui->horizontalScrollBar->value());
 ////        ui->verticalScrollBar->setValue(move.y() + ui->verticalScrollBar->value());
 ////}
-
 void MainWindow::cleanFields() {
     QRegularExpression expLnEdt("lnEdt");
     QRegularExpression expSpBox("spBx");
@@ -545,3 +650,4 @@ void MainWindow::cleanFields() {
         spBox->setValue(0);
     }
 }
+

@@ -1,7 +1,9 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
+#include <algorithm>
 #include <cmath>
+#include <QVector>
 
 class Particle
 {
@@ -31,6 +33,12 @@ public:
 
     /* Compute the distance between two points. */
     double computeEuclideanDist(double orgX, double orgY, double destX, double destY);
+
+    /* Sort the particles in ascending order, using the speed. */
+    void sortAscending(QVector<Particle *> &particles);
+
+    /* Sort the particles in descending order, using the distance. */
+    void sortDescending(QVector<Particle *> &particles);
 
 private:
     int id;
