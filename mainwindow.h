@@ -17,31 +17,10 @@
 #include <QGraphicsView>
 #include <algorithm>
 #include <QPushButton>
-
-#include <QPair>
-#include <QCloseEvent>
-#include <QMouseEvent>
-#include <QGraphicsSceneMouseEvent>
-
-
-//#include <QWheelEvent>
+#include <QSet>
 
 #include "particle.h"
 
-struct Node {
-    Particle * origin;
-    Particle *dest;
-    double distance;
-
-    Node() { }
-
-    Node(Particle *orig, Particle *d, double dist) : origin(orig), dest(d), distance(dist) { }
-
-    ~Node() {
-        delete origin;
-        delete dest;
-    }
-};
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -65,6 +44,20 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    struct Node {
+        Particle * origin;
+        Particle *dest;
+        double distance;
+
+        Node() { }
+
+        ~Node() {
+            // IS A GOOD IDEA?.
+            delete origin;
+            delete dest;
+        }
+    };
 
     enum {
         TAB_ADD_PARTICLE,
@@ -134,11 +127,8 @@ private:
     /* Draw the particles as lines. */
     void drawParticles();
 
-    void drawClosesParticles();
-
-//    void mouseMoveEvent(QMouseEvent  *event) override;
-
-////    void wheelEvent(QWheelEvent *event) ;
+    /* Draw the closest points in the particles. */
+    void drawClosestPoints();
 
     /* Clean each field. */
     void cleanFields();

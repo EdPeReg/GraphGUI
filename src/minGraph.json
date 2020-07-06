@@ -1,0 +1,53 @@
+[
+     {
+          "color": {
+               "blue": 76,
+               "green": 247,
+               "red": 103
+          },
+          "destino": {
+               "y": 481,
+               "x": 434
+          },
+          "origen": {
+               "y": 437,
+               "x": 0
+          },
+          "id": 1,
+          "velocidad": 1.0
+     },
+     {
+          "color": {
+               "blue": 172,
+               "green": 158,
+               "red": 26
+          },
+          "destino": {
+               "y": 130,
+               "x": 164
+          },
+          "origen": {
+               "y": 458,
+               "x": 2
+          },
+          "id": 2,
+          "velocidad": 2.0
+     },
+     {
+          "color": {
+               "blue": 109,
+               "green": 245,
+               "red": 23
+          },
+          "destino": {
+               "y": 481,
+               "x": 434
+          },
+          "origen": {
+               "y": 417,
+               "x": 18
+          },
+          "id": 3,
+          "velocidad": 3.0
+     }
+]

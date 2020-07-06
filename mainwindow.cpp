@@ -6,12 +6,18 @@ using namespace std;
 // TODO
 // - Able to do zoom in our graphics view.
 // - When there is a bar graph showed, able to hover a bar and say what particle belongs.
+// - Able to click in the particle and show what particle belongs in a table.
+
+
+// CHECK AGAIN CLOSEST PARTICLES IN GRAPH JSON FILES.
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , particle(nullptr)
+    , node(nullptr)
     , particles(0)
+    , nodes(0)
     , particleExist(false)
     , isBtnShowParticlePressed(false)
     , isAscendingPressed(false)
@@ -35,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->action_Save, &QAction::triggered, this, &MainWindow::saveJsonFile);
     connect(ui->action_Ascending, &QAction::triggered, this, &MainWindow::sortAscending);
     connect(ui->action_Descending, &QAction::triggered, this, &MainWindow::sortDescending);
-    connect(ui->action_Closest_Points, &QAction::triggered, this, &MainWindow::drawClosesParticles);
+    connect(ui->action_Closest_Points, &QAction::triggered, this, &MainWindow::drawClosestPoints);
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::tabSelected);
 }
 
@@ -499,7 +505,9 @@ void MainWindow::drawParticles()
     }
 }
 
-void MainWindow::drawClosesParticles()
+// This functions is doing too much maybe? not only draws the closest points, it also
+// analize the min distance between the points.
+void MainWindow::drawClosestPoints()
 {
     QMap<double, Node *> dicOrigOrig;
     QMap<double, Node *> dicOrigDest;
@@ -513,18 +521,18 @@ void MainWindow::drawClosesParticles()
     ui->gphViewGraph->setScene(particlesScene);
     QColor particleColor;
 
+    // Getting all the distance between origin-origin, origin-dest, dest-dest, dest-origin.
+    // The nodes will store the points with origin-destination-distance.
     foreach(const auto &rootParticle, particles) {
         foreach(const auto &particle, particles) {
-            qDebug() << "Root particle: " << rootParticle->getId();
-            qDebug() << "Current particle: " << particle->getId();
-
             node = new Node;
-
             double distOrigOrig = particle->computeEuclideanDist(rootParticle->getOrigX(),
                                                                 rootParticle->getOrigY(),
                                                                 particle->getOrigX(),
                                                                 particle->getOrigY());
-            node = new Node(rootParticle, particle, distOrigOrig);
+            node->origin = rootParticle;
+            node->dest = particle;
+            node->distance = distOrigOrig;
             dicOrigOrig[distOrigOrig] = node;
             nodes.push_back(node);
 
@@ -532,7 +540,9 @@ void MainWindow::drawClosesParticles()
                                                           rootParticle->getOrigY(),
                                                           particle->getDestX(),
                                                           particle->getDestY());
-            node = new Node(rootParticle, particle, distOrigDest);
+            node->origin = rootParticle;
+            node->dest = particle;
+            node->distance = distOrigDest;
             dicOrigDest[distOrigDest] = node;
             nodes.push_back(node);
 
@@ -540,7 +550,9 @@ void MainWindow::drawClosesParticles()
                                                           rootParticle->getDestY(),
                                                           particle->getDestX(),
                                                           particle->getDestY());
-            node = new Node(rootParticle, particle, distDestDest);
+            node->origin = rootParticle;
+            node->dest = particle;
+            node->distance = distDestDest;
             dicDestDest[distDestDest] = node;
             nodes.push_back(node);
 
@@ -548,16 +560,11 @@ void MainWindow::drawClosesParticles()
                                                           rootParticle->getDestY(),
                                                           particle->getOrigX(),
                                                           particle->getOrigY());
-            node = new Node(rootParticle, particle, distDestOrig);
+            node->origin = rootParticle;
+            node->dest = particle;
+            node->distance = distDestOrig;
             dicDestOrig[distDestOrig] = node;
             nodes.push_back(node);
-
-
-            qDebug() << "Dist orig orig: " << distOrigOrig << "\n";
-            qDebug() << "Dist orig dest: " << distOrigDest << "\n";
-            qDebug() << "Dist dest dest: " << distDestDest << "\n";
-            qDebug() << "Dist dest orig: " << distDestOrig << "\n";
-
         }
 
         // Delete the distance when the particle it's analize by itself.
@@ -566,94 +573,29 @@ void MainWindow::drawClosesParticles()
         pos = dicDestDest.find(0);
         dicDestDest.erase(pos);
 
-        qDebug() << "dic orig orig: " << dicOrigOrig << "\n";
-        qDebug() << "dic orig dest: " << dicOrigDest << "\n";
-        qDebug() << "dic dest orig: " << dicDestOrig << "\n";
-        qDebug() << "dic dest dest: " << dicDestDest << "\n";
-
+        // Because we are using a map, is already sorted by key,
+        // only get the first position which is the min distance.
         double minOrigOrig = dicOrigOrig.begin().key();
         double minOrigDest = dicOrigDest.begin().key();
         double minDestOrig = dicDestOrig.begin().key();
         double minDestDest = dicDestDest.begin().key();
 
-        qDebug() << "min orig orig: " << minOrigOrig;
-        qDebug() << "min orig dest: " << minOrigDest;
-        qDebug() << "min dest orig: " << minDestOrig;
-        qDebug() << "min dest dest: " << minDestDest;
-
-
-        qDebug() << "dic orig orig: " << dicOrigOrig << "\n";
-        foreach(const auto &element, dicOrigOrig) {
-        qDebug() << "id origen: " << element->origin->getId() << " "
-                 << "orig x: " << element->origin->getOrigX()
-                 << "orig y: " << element->origin->getOrigY()
-                 << "dest x: " << element->origin->getDestX()
-                 << "dest y: " << element->origin->getDestY()
-                 << " ->> id destino: " << element->dest->getId()
-                 << "orig x: " << element->dest->getOrigX()
-                 << "orig y: " << element->dest->getOrigY()
-                 << "dest x: " << element->dest->getDestX()
-                 << "dest y: " << element->dest->getDestY()
-                 << "distance: " << element->distance;
-        }
-
-        qDebug() << "dic orig dest: " << dicOrigDest << "\n";
-        foreach(const auto &element, dicOrigDest) {
-        qDebug() << "id origen: " << element->origin->getId() << " "
-                 << "orig x: " << element->origin->getOrigX()
-                 << "orig y: " << element->origin->getOrigY()
-                 << "dest x: " << element->origin->getDestX()
-                 << "dest y: " << element->origin->getDestY()
-                 << " ->> id destino: " << element->dest->getId()
-                 << "orig x: " << element->dest->getOrigX()
-                 << "orig y: " << element->dest->getOrigY()
-                 << "dest x: " << element->dest->getDestX()
-                 << "dest y: " << element->dest->getDestY()
-                 << "distance: " << element->distance;
-        }
-
-        qDebug() << "dic dest orig: " << dicDestOrig << "\n";
-        foreach(const auto &element, dicDestOrig) {
-        qDebug() << "id origen: " << element->origin->getId() << " "
-                 << "orig x: " << element->origin->getOrigX()
-                 << "orig y: " << element->origin->getOrigY()
-                 << "dest x: " << element->origin->getDestX()
-                 << "dest y: " << element->origin->getDestY()
-                 << " ->> id destino: " << element->dest->getId()
-                 << "orig x: " << element->dest->getOrigX()
-                 << "orig y: " << element->dest->getOrigY()
-                 << "dest x: " << element->dest->getDestX()
-                 << "dest y: " << element->dest->getDestY()
-                 << "distance: " << element->distance;
-        }
-
-        qDebug() << "dic dest dest: " << dicDestDest << "\n";
-        foreach(const auto &element, dicDestDest) {
-        qDebug() << "id origen: " << element->origin->getId() << " "
-                 << "orig x: " << element->origin->getOrigX()
-                 << "orig y: " << element->origin->getOrigY()
-                 << "dest x: " << element->origin->getDestX()
-                 << "dest y: " << element->origin->getDestY()
-                 << " ->> id destino: " << element->dest->getId()
-                 << "orig x: " << element->dest->getOrigX()
-                 << "orig y: " << element->dest->getOrigY()
-                 << "dest x: " << element->dest->getDestX()
-                 << "dest y: " << element->dest->getDestY()
-                 << "distance: " << element->distance;
-        }
-
+        // Draw depending of the min distance.
         // Origin-origin.
         if(minOrigOrig < minOrigDest) {
             auto element = dicOrigOrig.find(minOrigOrig);
 
-
-            particleColor.setRgb(node->origin->getRed(),
-                                 node->origin->getGreen(),
-                                 node->origin->getBlue());
+            particleColor.setRgb(rootParticle->getRed(),
+                                 rootParticle->getGreen(),
+                                 rootParticle->getBlue());
             pen.setColor(particleColor);
 
-            particlesScene->addRect(node->origin->getOrigX(),
-                                    node->origin->getOrigY(),
+            particlesScene->addRect(rootParticle->getOrigX(),
+                                    rootParticle->getOrigY(),
+                                    6, 6, pen, particleColor);
+
+            particlesScene->addRect(rootParticle->getDestX(),
+                                    rootParticle->getDestY(),
                                     6, 6, pen, particleColor);
 
             particlesScene->addLine(rootParticle->getOrigX() + 3,
@@ -665,14 +607,18 @@ void MainWindow::drawClosesParticles()
         else {
             auto element = dicOrigDest.find(minOrigDest);
 
-            particleColor.setRgb(particle->getRed(),
-                                 particle->getGreen(),
-                                 particle->getBlue());
+            particleColor.setRgb(rootParticle->getRed(),
+                                 rootParticle->getGreen(),
+                                 rootParticle->getBlue());
             pen.setColor(particleColor);
 
 
-            particlesScene->addRect(node->origin->getOrigX(),
-                                    node->origin->getOrigY(),
+            particlesScene->addRect(rootParticle->getOrigX(),
+                                    rootParticle->getOrigY(),
+                                    6, 6, pen, particleColor);
+
+            particlesScene->addRect(rootParticle->getDestX(),
+                                    rootParticle->getDestY(),
                                     6, 6, pen, particleColor);
 
              particlesScene->addLine(rootParticle->getOrigX() + 3,
@@ -685,13 +631,17 @@ void MainWindow::drawClosesParticles()
         if(minDestOrig < minDestDest) {
             auto element = dicDestOrig.find(minDestOrig);
 
-            particleColor.setRgb(particle->getRed(),
-                                 particle->getGreen(),
-                                 particle->getBlue());
+            particleColor.setRgb(rootParticle->getRed(),
+                                 rootParticle->getGreen(),
+                                 rootParticle->getBlue());
             pen.setColor(particleColor);
 
-            particlesScene->addRect(node->dest->getDestX(),
-                                    node->dest->getDestY(),
+            particlesScene->addRect(rootParticle->getOrigX(),
+                                    rootParticle->getOrigY(),
+                                    6, 6, pen, particleColor);
+
+            particlesScene->addRect(rootParticle->getDestX(),
+                                    rootParticle->getDestY(),
                                     6, 6, pen, particleColor);
 
              particlesScene->addLine(rootParticle->getDestX() + 3,
@@ -704,13 +654,17 @@ void MainWindow::drawClosesParticles()
         else {
             auto element = dicDestDest.find(minDestDest);
 
-            particleColor.setRgb(particle->getRed(),
-                                 particle->getGreen(),
-                                 particle->getBlue());
+            particleColor.setRgb(rootParticle->getRed(),
+                                 rootParticle->getGreen(),
+                                 rootParticle->getBlue());
             pen.setColor(particleColor);
 
-            particlesScene->addRect(node->dest->getDestX(),
-                                    node->dest->getDestY(),
+            particlesScene->addRect(rootParticle->getOrigX(),
+                                    rootParticle->getOrigY(),
+                                    6, 6, pen, particleColor);
+
+            particlesScene->addRect(rootParticle->getDestX(),
+                                    rootParticle->getDestY(),
                                     6, 6, pen, particleColor);
 
              particlesScene->addLine(rootParticle->getDestX() + 3,
@@ -718,14 +672,13 @@ void MainWindow::drawClosesParticles()
                                      element.value()->dest->getDestX() + 3,
                                      element.value()->dest->getDestY() + 3, pen);
         }
-    qDebug() << "limpiooooos";
-    dicOrigOrig.clear();
-    dicOrigDest.clear();
-    dicDestOrig.clear();
-    dicDestDest.clear();
+
+        // We don't want the previous information, delete it.
+        dicOrigOrig.clear();
+        dicOrigDest.clear();
+        dicDestOrig.clear();
+        dicDestDest.clear();
     }
-
-
 }
 
 void MainWindow::cleanFields() {
