@@ -17,7 +17,6 @@
 #include <QGraphicsView>
 #include <algorithm>
 #include <QPushButton>
-#include <QSet>
 
 #include "particle.h"
 
@@ -46,7 +45,7 @@ private:
     Ui::MainWindow *ui;
 
     struct Node {
-        Particle * origin;
+        Particle *origin;
         Particle *dest;
         double distance;
 
@@ -132,5 +131,6 @@ private:
 
     /* Clean each field. */
     void cleanFields();
+
 };
 #endif // MAINWINDOW_H

@@ -514,6 +514,11 @@ void MainWindow::drawClosestPoints()
     QMap<double, Node *> dicDestDest;
     QMap<double, Node *> dicDestOrig;
 
+    double distOrigOrig = 0;
+    double distOrigDest = 0;
+    double distDestOrig = 0;
+    double distDestDest = 0;
+
     particlesScene = new QGraphicsScene(this);
     particlesScene->clear();
     QPen pen;
@@ -526,7 +531,7 @@ void MainWindow::drawClosestPoints()
     foreach(const auto &rootParticle, particles) {
         foreach(const auto &particle, particles) {
             node = new Node;
-            double distOrigOrig = particle->computeEuclideanDist(rootParticle->getOrigX(),
+            distOrigOrig = particle->computeEuclideanDist(rootParticle->getOrigX(),
                                                                 rootParticle->getOrigY(),
                                                                 particle->getOrigX(),
                                                                 particle->getOrigY());
@@ -536,7 +541,7 @@ void MainWindow::drawClosestPoints()
             dicOrigOrig[distOrigOrig] = node;
             nodes.push_back(node);
 
-            double distOrigDest = particle->computeEuclideanDist(rootParticle->getOrigX(),
+            distOrigDest = particle->computeEuclideanDist(rootParticle->getOrigX(),
                                                           rootParticle->getOrigY(),
                                                           particle->getDestX(),
                                                           particle->getDestY());
@@ -546,7 +551,7 @@ void MainWindow::drawClosestPoints()
             dicOrigDest[distOrigDest] = node;
             nodes.push_back(node);
 
-            double distDestDest = particle->computeEuclideanDist(rootParticle->getDestX(),
+            distDestDest = particle->computeEuclideanDist(rootParticle->getDestX(),
                                                           rootParticle->getDestY(),
                                                           particle->getDestX(),
                                                           particle->getDestY());
@@ -556,7 +561,7 @@ void MainWindow::drawClosestPoints()
             dicDestDest[distDestDest] = node;
             nodes.push_back(node);
 
-            double distDestOrig = particle->computeEuclideanDist(rootParticle->getDestX(),
+            distDestOrig = particle->computeEuclideanDist(rootParticle->getDestX(),
                                                           rootParticle->getDestY(),
                                                           particle->getOrigX(),
                                                           particle->getOrigY());
@@ -565,7 +570,24 @@ void MainWindow::drawClosestPoints()
             node->distance = distDestOrig;
             dicDestOrig[distDestOrig] = node;
             nodes.push_back(node);
+
+
+            // There is a case, where two points (origen-destino, destino-origen) their distance it's                 # 0, this it's because one point it's above one another. The problem it's when I'm obtaining
+            // the minimum distance, because of this, the program doesn't draw anything, so...
+            //  Just delete the key value 0.0 from the dictionary to not get the min value 0. Again, this is
+            //  not efficient because I add the 0.0 before and I delete 0.0 right know, doing two operations,
+            //  that depends of how many iterations I will do, INEFFICIENT.
+            auto pos = dicOrigDest.find(0);
+            if(distOrigDest == 0) {
+                dicOrigDest.erase(pos);
+            }
+
+            pos = dicDestOrig.find(0);
+            if(distDestOrig == 0) {
+                dicDestOrig.erase(pos);
+            }
         }
+
 
         // Delete the distance when the particle it's analize by itself.
         auto pos = dicOrigOrig.find(0);
