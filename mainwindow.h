@@ -44,6 +44,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    //  Use graph insted this.
     struct Edge {
         Particle *origin;
         Particle *dest;
@@ -76,6 +77,8 @@ private:
     bool isDescendingPressed;
     bool isBtnGraphParticlesPressed;
     bool isBtnBarGraphParticlesPressed;
+    bool isBtnAdjListPressed;
+    bool isBtnParticleInfoPressed;
 
     /* Open the user's json file. */
     void openJsonFile();

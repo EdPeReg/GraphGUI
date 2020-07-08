@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
     , isDescendingPressed(false)
     , isBtnGraphParticlesPressed(false)
     , isBtnBarGraphParticlesPressed(false)
+    , isBtnAdjListPressed(false)
+    , isBtnParticleInfoPressed(false)
 {
     ui->setupUi(this);
 
@@ -71,38 +73,64 @@ void MainWindow::btnShowPressed() {
     QString value;
     int i = 0;
 
+    QMessageBox msgBox;
+    QPushButton *btnAdjList = msgBox.addButton("Adjacency List Graph", QMessageBox::ActionRole);
+    QPushButton *btnParticleInfo = msgBox.addButton("Particles Information", QMessageBox::ActionRole);
+    QPushButton *btnCancel = msgBox.addButton("Cancel", QMessageBox::RejectRole);
+
+    //  REALLY ?????
+    msgBox.setText("                                          Show Option");
+
+    msgBox.exec();
+    if(msgBox.clickedButton() == btnAdjList) {
+        isBtnAdjListPressed= true;
+        isBtnParticleInfoPressed = false;
+    } else if(msgBox.clickedButton() == btnParticleInfo) {
+        isBtnParticleInfoPressed = true;
+        isBtnAdjListPressed = false;
+    }
+    // IS THIS THE ONLY WAY TO MAKE THE WINDOW CLOSE WITH THE X?
+    else if(msgBox.clickedButton() == btnCancel) {
+
+    }
+
     // Iterate in each particle, get its information and append that information
     // in a text edit.
     foreach(const auto &particle, particles) {
-        QString aux2 = "Particula: " + QString::number(i + 1);
-        ui->txtEdtParticleInfo->append(aux2);
         double distance = particle->computeEuclideanDist(particle->getOrigX(),
                                                particle->getOrigY(),
                                                particle->getDestX(),
                                                particle->getDestY());
 
-        QString value = QString::number(particle->getId());
-        ui->txtEdtParticleInfo->append("ID : " + value);
-        value = QString::number(particle->getOrigX());
-        ui->txtEdtParticleInfo->append("Origin X : " + value);
-        value = QString::number(particle->getOrigY());
-        ui->txtEdtParticleInfo->append("Origin Y : " + value);
-        value = QString::number(particle->getDestX());
-        ui->txtEdtParticleInfo->append("Destination X : " + value);
-        value = QString::number(particle->getDestY());
-        ui->txtEdtParticleInfo->append("Destination Y : " + value);
-        value = QString::number(particle->getSpeed());
-        ui->txtEdtParticleInfo->append("Speed : " + value);
-        value = QString::number(particle->getRed());
-        ui->txtEdtParticleInfo->append("Color Red : " + value);
-        value = QString::number(particle->getGreen());
-        ui->txtEdtParticleInfo->append("Color Green : " + value);
-        value = QString::number(particle->getBlue());
-        ui->txtEdtParticleInfo->append("Color Blue : " + value);
-        value = QString::number(distance);
-        QString auxStr = "Distancia euclidiana";
-        ui->txtEdtParticleInfo->append("Euclidean Distance : " + value);
-        ui->txtEdtParticleInfo->append("\n");
+        if(isBtnAdjListPressed) {
+
+        } else if(isBtnParticleInfoPressed) {
+            QString aux2 = "Particula: " + QString::number(i + 1);
+            ui->txtEdtParticleInfo->append(aux2);
+            QString value = QString::number(particle->getId());
+            ui->txtEdtParticleInfo->append("ID : " + value);
+            value = QString::number(particle->getOrigX());
+            ui->txtEdtParticleInfo->append("Origin X : " + value);
+            value = QString::number(particle->getOrigY());
+            ui->txtEdtParticleInfo->append("Origin Y : " + value);
+            value = QString::number(particle->getDestX());
+            ui->txtEdtParticleInfo->append("Destination X : " + value);
+            value = QString::number(particle->getDestY());
+            ui->txtEdtParticleInfo->append("Destination Y : " + value);
+            value = QString::number(particle->getSpeed());
+            ui->txtEdtParticleInfo->append("Speed : " + value);
+            value = QString::number(particle->getRed());
+            ui->txtEdtParticleInfo->append("Color Red : " + value);
+            value = QString::number(particle->getGreen());
+            ui->txtEdtParticleInfo->append("Color Green : " + value);
+            value = QString::number(particle->getBlue());
+            ui->txtEdtParticleInfo->append("Color Blue : " + value);
+            value = QString::number(distance);
+            QString auxStr = "Distancia euclidiana";
+            ui->txtEdtParticleInfo->append("Euclidean Distance : " + value);
+            ui->txtEdtParticleInfo->append("\n");
+        }
+
         i++;
     }
 
