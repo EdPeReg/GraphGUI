@@ -22,6 +22,7 @@ SOURCES += \
     showinformation.cpp
 
 HEADERS += \
+    graph.h \
     mainwindow.h \
     particle.h \
     showinformation.h

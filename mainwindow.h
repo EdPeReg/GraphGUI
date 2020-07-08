@@ -19,7 +19,7 @@
 #include <QPushButton>
 
 #include "particle.h"
-
+#include "graph.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -44,14 +44,14 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    struct Node {
+    struct Edge {
         Particle *origin;
         Particle *dest;
         double distance;
 
-        Node() { }
+        Edge() { }
 
-        ~Node() {
+        ~Edge() {
             // IS A GOOD IDEA?.
             delete origin;
             delete dest;
@@ -64,9 +64,10 @@ private:
     };
 
     Particle *particle;
-    Node *node;
+    Edge *edge;
     QVector<Particle *> particles;
-    QVector<Node *> nodes;
+    QVector<Edge *> edges;
+    Graph graph;
 
     QGraphicsScene *particlesScene;
     bool particleExist;

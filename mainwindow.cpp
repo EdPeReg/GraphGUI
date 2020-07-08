@@ -15,9 +15,9 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , particle(nullptr)
-    , node(nullptr)
+    , edge(nullptr)
     , particles(0)
-    , nodes(0)
+    , edges(0)
     , particleExist(false)
     , isBtnShowParticlePressed(false)
     , isAscendingPressed(false)
@@ -53,8 +53,8 @@ MainWindow::~MainWindow()
         delete particle;
     }
 
-    foreach(auto &node, nodes) {
-        delete node;
+    foreach(auto &edge, edges) {
+        delete edge;
     }
 }
 
@@ -509,10 +509,10 @@ void MainWindow::drawParticles()
 // analize the min distance between the points.
 void MainWindow::drawClosestPoints()
 {
-    QMap<double, Node *> dicOrigOrig;
-    QMap<double, Node *> dicOrigDest;
-    QMap<double, Node *> dicDestDest;
-    QMap<double, Node *> dicDestOrig;
+    QMap<double, Edge *> dicOrigOrig;
+    QMap<double, Edge *> dicOrigDest;
+    QMap<double, Edge *> dicDestDest;
+    QMap<double, Edge *> dicDestOrig;
 
     double distOrigOrig = 0;
     double distOrigDest = 0;
@@ -527,52 +527,53 @@ void MainWindow::drawClosestPoints()
     QColor particleColor;
 
     // Getting all the distance between origin-origin, origin-dest, dest-dest, dest-origin.
-    // The nodes will store the points with origin-destination-distance.
+    // The edges will store the points with origin-destination-distance.
     foreach(const auto &rootParticle, particles) {
         foreach(const auto &particle, particles) {
-            node = new Node;
+            edge = new Edge;
             distOrigOrig = particle->computeEuclideanDist(rootParticle->getOrigX(),
                                                                 rootParticle->getOrigY(),
                                                                 particle->getOrigX(),
                                                                 particle->getOrigY());
-            node->origin = rootParticle;
-            node->dest = particle;
-            node->distance = distOrigOrig;
-            dicOrigOrig[distOrigOrig] = node;
-            nodes.push_back(node);
+            edge->origin = rootParticle;
+            edge->dest = particle;
+            edge->distance = distOrigOrig;
+            dicOrigOrig[distOrigOrig] = edge;
+            edges.push_back(edge);
 
             distOrigDest = particle->computeEuclideanDist(rootParticle->getOrigX(),
                                                           rootParticle->getOrigY(),
                                                           particle->getDestX(),
                                                           particle->getDestY());
-            node->origin = rootParticle;
-            node->dest = particle;
-            node->distance = distOrigDest;
-            dicOrigDest[distOrigDest] = node;
-            nodes.push_back(node);
+            edge->origin = rootParticle;
+            edge->dest = particle;
+            edge->distance = distOrigDest;
+            dicOrigDest[distOrigDest] = edge;
+            edges.push_back(edge);
 
             distDestDest = particle->computeEuclideanDist(rootParticle->getDestX(),
                                                           rootParticle->getDestY(),
                                                           particle->getDestX(),
                                                           particle->getDestY());
-            node->origin = rootParticle;
-            node->dest = particle;
-            node->distance = distDestDest;
-            dicDestDest[distDestDest] = node;
-            nodes.push_back(node);
+            edge->origin = rootParticle;
+            edge->dest = particle;
+            edge->distance = distDestDest;
+            dicDestDest[distDestDest] = edge;
+            edges.push_back(edge);
 
             distDestOrig = particle->computeEuclideanDist(rootParticle->getDestX(),
                                                           rootParticle->getDestY(),
                                                           particle->getOrigX(),
                                                           particle->getOrigY());
-            node->origin = rootParticle;
-            node->dest = particle;
-            node->distance = distDestOrig;
-            dicDestOrig[distDestOrig] = node;
-            nodes.push_back(node);
+            edge->origin = rootParticle;
+            edge->dest = particle;
+            edge->distance = distDestOrig;
+            dicDestOrig[distDestOrig] = edge;
+            edges.push_back(edge);
 
 
-            // There is a case, where two points (origen-destino, destino-origen) their distance it's                 # 0, this it's because one point it's above one another. The problem it's when I'm obtaining
+            // There is a case, where two points (origen-destino, destino-origen) their distance it's
+            // 0, this it's because one point it's above another point. The problem it's when I'm obtaining
             // the minimum distance, because of this, the program doesn't draw anything, so...
             //  Just delete the key value 0.0 from the dictionary to not get the min value 0. Again, this is
             //  not efficient because I add the 0.0 before and I delete 0.0 right know, doing two operations,
