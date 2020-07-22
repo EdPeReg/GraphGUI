@@ -46,6 +46,8 @@ private:
     int destX, destY;
     int speed;
     short red, green, blue;
+
+
 };
 
 #endif // PARTICLE_H

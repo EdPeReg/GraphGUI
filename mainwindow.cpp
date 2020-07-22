@@ -50,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete particle;
+    delete edge;
 
     foreach(auto &particle, particles) {
         delete particle;
@@ -102,8 +104,70 @@ void MainWindow::btnShowPressed() {
                                                particle->getDestX(),
                                                particle->getDestY());
 
-        if(isBtnAdjListPressed) {
+//        Particle *part = new Particle;
+//        part->setOrigX(particleOrig->getOrigX());
+//        part->setOrigY(particleOrig->getOrigY());
+//        part->setDestX(particleOrig->getDestX());
+//        part->setDestY(particleOrig->getDestY());
 
+        if(isBtnAdjListPressed) {
+//            Edge *edge = new Edge;
+//            edge->origin->setOrigX(particle->getOrigX());
+//            edge->origin->setOrigY(particle->getOrigY());
+//            edge->dest->setDestX(particle->getDestX());
+//            edge->dest->setDestY(particle->getDestY());
+
+//            graph.insertEdge(edge->origin, edge->dest, distance);
+
+            foreach(const auto &particleDest, particles) {
+                Particle *partDest = new Particle;
+
+                partDest->setOrigX(particleDest->getOrigX());
+                partDest->setOrigY(particleDest->getOrigY());
+                partDest->setDestX(particleDest->getDestX());
+                partDest->setDestY(particleDest->getDestY());
+
+                graph.insertEdge(particle, partDest, distance);
+//                if(particle->getId() == particleDest->getId()) continue;
+//                Particle *part2 = new Particle;
+
+//                part2->setOrigX(particleDest->getOrigX());
+//                part2->setOrigY(particleDest->getOrigY());
+//                part2->setDestX(particleDest->getDestX());
+//                part2->setDestY(particleDest->getDestY());
+
+//                qDebug() << "particle orig: " << particle->getId();
+//                qDebug() << "particle dest: " << particleDest->getId();
+//                graph.insertEdge(particle, particleDest, distance);
+
+            }
+
+//            graph.insertEdge(particle, particle, distance);
+
+//            graph.toString();
+//            Vertex *origin = new Vertex;
+//            Vertex *dest = new Vertex;
+
+//            origin->vertex->setOrigX(particle->getOrigX());
+//            origin->vertex->setOrigY(particle->getOrigY());
+//            origin->vertex->setDestX(particle->getDestX());
+//            origin->vertex->setDestY(particle->getDestY());
+
+//            dest->vertex->setOrigX(particle->getOrigX());
+//            dest->vertex->setOrigY(particle->getOrigY());
+//            dest->vertex->setDestX(particle->getDestX());
+//            dest->vertex->setDestY(particle->getDestY());
+
+//            graph.insertEdge(origin, dest, distance);
+
+//            Edge *edge = new Edge;
+
+//            edge->origin->setOrigX(particle->getOrigX());
+//            edge->origin->setOrigY(particle->getOrigY());
+//            edge->dest->setDestX(particle->getDestX());
+//            edge->dest->setDestY(particle->getDestY());
+
+//            graph.insertEdge(edge->origin, edge->dest, distance);
         } else if(isBtnParticleInfoPressed) {
             QString aux2 = "Particula: " + QString::number(i + 1);
             ui->txtEdtParticleInfo->append(aux2);
@@ -134,6 +198,7 @@ void MainWindow::btnShowPressed() {
         i++;
     }
 
+    graph.toString();
 //    ShowInformation showInfoDialog(this, particles);
 //    showInfoDialog.setModal(true);
     //    showInfoDialog.exec();
